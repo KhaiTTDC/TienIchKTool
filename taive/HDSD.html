@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>KTool - Hướng dẫn sử dụng</title><style>body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.55;color:#222}h1{color:#0b4f8a}h2{color:#0b4f8a;border-bottom:1px solid #ccd;padding-bottom:4px;margin-top:32px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:4px 8px}th{background:#eef3f8}code{background:#f3f3f3;padding:1px 4px;border-radius:3px}pre{background:#f6f8fa;padding:10px;overflow:auto}</style></head><body><h1>KTool 1.23.0 – Hướng dẫn sử dụng</h1>
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>KTool - Hướng dẫn sử dụng</title><style>body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.55;color:#222}h1{color:#0b4f8a}h2{color:#0b4f8a;border-bottom:1px solid #ccd;padding-bottom:4px;margin-top:32px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:4px 8px}th{background:#eef3f8}code{background:#f3f3f3;padding:1px 4px;border-radius:3px}pre{background:#f6f8fa;padding:10px;overflow:auto}</style></head><body><h1>KTool 1.0 – Hướng dẫn sử dụng</h1>
 <p>Công cụ VBA hỗ trợ biên tập bản đồ địa chính trên <strong>MicroStation V8i</strong> (SELECTseries 1–10, 32-bit) và <strong>MicroStation CONNECT Edition</strong> (64-bit): chuẩn hóa dữ liệu, kiểm tra và sửa lỗi topo, tạo vùng thửa, gán và quản lý thuộc tính, vẽ nhãn thửa, vẽ nhãn quy chủ, kiểm tra thuộc tính; tạo khung bản đồ theo TT 26/2024, nhập số liệu đo và nối điểm, lập sơ đồ hình thể và hồ sơ thửa đất (phiếu kết quả đo đạc, trích lục, bản mô tả ranh giới, trang in GCN), xuất Shapefile, chuyển đổi font TCVN3/VNI ↔ Unicode.</p>
 <hr />
 <h2>1. Thành phần (thư mục <code>src</code> trong thư mục cài)</h2>
@@ -131,7 +131,7 @@
 <p>Mã nguồn để ở dạng ASCII (tiếng Việt được mã hóa <code>\uXXXX</code> và giải mã khi chạy), nên import vào VBA trên Windows ở bất kỳ ngôn ngữ hệ thống nào cũng không bị lỗi font.</p>
 <hr />
 <h2>2. Cài đặt</h2>
-<h3>2.1 Cài bằng file <code>KTool_Setup_v1.23.0_PhatHanh.exe</code> (khuyên dùng)</h3>
+<h3>2.1 Cài bằng file <code>KTool_Setup_v1.0_PhatHanh.exe</code> (khuyên dùng)</h3>
 <ol>
 <li><strong>Đóng MicroStation</strong>, giải nén gói cài, chạy <code>KTool_Setup_v…_PhatHanh.exe</code> (để <code>KTool.mvba</code> cùng thư mục) (cần quyền Administrator).</li>
 <li>Chọn thư mục cài (mặc định <code>C:\KTool</code>). <strong>Nên dùng đường dẫn không dấu, không khoảng trắng.</strong></li>
@@ -218,7 +218,7 @@
 <h2>3. Chuẩn bị trước khi chạy</h2>
 <ul>
 <li>File DGN dùng <strong>hệ tọa độ VN-2000, đơn vị chính (master unit) là mét</strong>.</li>
-<li>Từ bản 1.23.0 cấu hình chung lưu ở <strong><code>%LOCALAPPDATA%\KTool\KTool_CauHinh.ini</code></strong> – KTool <strong>không tự tạo</strong> file cấu hình cạnh file DGN. Thư mục dữ liệu nào đã có sẵn <code>KTool_CauHinh.ini</code> (từ bản cũ hoặc tự chép vào) thì vẫn dùng cấu hình riêng đó. Mở bằng nút <em>Mở file cấu hình…</em> và kiểm tra:</li>
+<li>Từ bản 1.0 cấu hình chung lưu ở <strong><code>%LOCALAPPDATA%\KTool\KTool_CauHinh.ini</code></strong> – KTool <strong>không tự tạo</strong> file cấu hình cạnh file DGN. Thư mục dữ liệu nào đã có sẵn <code>KTool_CauHinh.ini</code> (từ bản cũ hoặc tự chép vào) thì vẫn dùng cấu hình riêng đó. Mở bằng nút <em>Mở file cấu hình…</em> và kiểm tra:</li>
 <li><code>[Chung] TyLe</code>, <code>DungSai</code> (mặc định 0,05 m), <code>DoanThuaToiDa</code>, <code>DienTichToiThieu</code>.</li>
 <li><code>[Lop]</code>: lớp ranh thửa (mặc định <code>10</code>), lớp chữ có sẵn (<code>13</code>), lớp vẽ nhãn, lớp vùng thửa (<code>VUNG_THUA</code>), lớp quy chủ, lớp lỗi. Có thể nhập tên level hoặc số level; nhiều lớp cách nhau dấu phẩy. <strong>Kiểm tra lại theo bảng phân lớp/quy định kỹ thuật bạn đang áp dụng</strong> – giá trị mặc định chỉ là gợi ý.</li>
 <li><code>[ThuocTinh] MaLoaiDat</code>: danh mục mã loại đất mặc định lấy theo Phụ lục II Thông tư 08/2024/TT-BTNMT; bổ sung mã cũ (vd. <code>BHK</code>, <code>NHK</code>) nếu dữ liệu còn dùng.</li>
@@ -232,8 +232,8 @@
 <li><strong>chọn 1 trong 63 level</strong> mặc định của MicroStation (1–63): level chưa có trong file thì tạo đúng số level đó (kiểu tên <code>n</code> hoặc <code>Level n</code> theo file);</li>
 <li>chọn level có sẵn bất kỳ, hoặc gõ tên mới.</li>
 <li>Ký hiệu cell TT26: thêm mục <em>Level đặt ký hiệu</em> (theo TT26 từng ký hiệu hoặc 1 level tự chọn / để trống).</li>
-<li>Mỗi lệnh có sửa dữ liệu sẽ <strong>tự lưu và sao lưu</strong> file DGN (kèm .ktb) vào <code>%LOCALAPPDATA%\KTool\SaoLuu\&lt;tên file&gt;</code> – <strong>không tạo thư mục <code>_SaoLuu</code> cạnh bản đồ</strong> (từ 1.23.0); giữ 10 bản mới nhất mỗi file (<code>[Chung] SoBanSaoLuu=10</code>), tắt bằng <code>SaoLuuTruocKhiChay=0</code>. Khi cần quay lại: Undo của MicroStation hoặc mở bản sao lưu.</li>
-<li><strong>Không tự sinh file</strong> (từ 1.23.0): ngoài file bản đồ, CSDL thuộc tính <code>.ktb</code> và nhật ký <code>.ktlog</code>, KTool không tự tạo file nào trong thư mục dữ liệu. Các báo cáo (<code>_KiemTra.txt</code>, <code>_NhanChongDe.csv</code>, <code>_ChuyenMa.csv</code>, <code>_gCadas.csv</code>, nhận dạng level...) chỉ ghi ra khi bạn trả lời <strong>Yes</strong> ở câu hỏi "Xuất ... ra file?" (muốn luôn xuất, không hỏi: <code>[Chung] XuatBaoCao=1</code>). File <code>.ktt</code> chỉ cập nhật khi bật <em>Tự cập nhật .ktt</em> hoặc chạy lệnh xuất; file <code>.prj</code> khi tạo DGN mới chỉ ghi khi tích <em>Ghi kèm file .prj</em>. Nhật ký chạy hàng loạt, file tạm, bản sao lưu gCadas / world file nằm trong <code>%LOCALAPPDATA%\KTool</code>.</li>
+<li>Mỗi lệnh có sửa dữ liệu sẽ <strong>tự lưu và sao lưu</strong> file DGN (kèm .ktb) vào <code>%LOCALAPPDATA%\KTool\SaoLuu\&lt;tên file&gt;</code> – <strong>không tạo thư mục <code>_SaoLuu</code> cạnh bản đồ</strong> (từ 1.0); giữ 10 bản mới nhất mỗi file (<code>[Chung] SoBanSaoLuu=10</code>), tắt bằng <code>SaoLuuTruocKhiChay=0</code>. Khi cần quay lại: Undo của MicroStation hoặc mở bản sao lưu.</li>
+<li><strong>Không tự sinh file</strong> (từ 1.0): ngoài file bản đồ, CSDL thuộc tính <code>.ktb</code> và nhật ký <code>.ktlog</code>, KTool không tự tạo file nào trong thư mục dữ liệu. Các báo cáo (<code>_KiemTra.txt</code>, <code>_NhanChongDe.csv</code>, <code>_ChuyenMa.csv</code>, <code>_gCadas.csv</code>, nhận dạng level...) chỉ ghi ra khi bạn trả lời <strong>Yes</strong> ở câu hỏi "Xuất ... ra file?" (muốn luôn xuất, không hỏi: <code>[Chung] XuatBaoCao=1</code>). File <code>.ktt</code> chỉ cập nhật khi bật <em>Tự cập nhật .ktt</em> hoặc chạy lệnh xuất; file <code>.prj</code> khi tạo DGN mới chỉ ghi khi tích <em>Ghi kèm file .prj</em>. Nhật ký chạy hàng loạt, file tạm, bản sao lưu gCadas / world file nằm trong <code>%LOCALAPPDATA%\KTool</code>.</li>
 </ul>
 <hr />
 <h2>4. Quy trình khuyến nghị</h2>
@@ -1321,12 +1321,13 @@ Xóm 1 Phúc Lại
 <li>Thửa còn thiếu số thửa được đánh dấu <code>THIEU_SO</code> trên lớp lỗi; thửa nhận 2 số thửa khác nhau đánh dấu <code>SOTHUA?</code>. Có thể đọc tiếp bảng thửa nhỏ ở góc khung.</li>
 </ul>
 <h3>5.31 Tự động cập nhật (menu Trợ giúp &gt; Kiểm tra cập nhật)</h3>
-<p>KTool tự kiểm tra bản mới <strong>tối đa 1 lần / 7 ngày</strong> khi mở thanh công cụ (im lặng nếu không có mạng; báo ở thanh trạng thái khi có bản mới). Lệnh <em>Kiểm tra cập nhật</em> cho xem nội dung và cập nhật ngay:</p>
+<p><strong>Mỗi lần khởi động MicroStation</strong> (khi thanh công cụ KTool mở lần đầu), KTool kiểm tra máy chủ cập nhật. Có phiên bản / bộ quy định mới thì <strong>hiện thông báo</strong>: phiên bản mới, phiên bản đang dùng, nội dung cập nhật và yêu cầu cập nhật – <strong>Yes</strong>: tải và cập nhật ngay (phần chương trình được thay khi đóng MicroStation), <strong>No</strong>: nhắc lại ở lần khởi động sau. Bản quá cũ để cập nhật qua mạng: thông báo mở trang <strong>TienIchKTool</strong> để tải bộ cài. Không có mạng: im lặng, không làm chậm quá vài giây. Muốn chỉ kiểm tra 1 lần / <code>SoNgay</code> ngày và báo ở thanh trạng thái (kiểu cũ): <code>[CapNhat] KhiKhoiDong = 0</code>. Lệnh <em>Kiểm tra cập nhật</em> cho xem nội dung và cập nhật bất cứ lúc nào:</p>
 <ul>
 <li><strong>Bộ quy định</strong> (<code>QuyDinh.ini</code>: mã loại đất theo Luật Đất đai / thông tư mới, bảng phân lớp TT26, danh mục ĐVHC, mẫu hồ sơ, biểu tượng, hướng dẫn) – áp dụng <strong>ngay</strong>, không cần khởi động lại.</li>
 <li><strong>Chương trình</strong> (<code>KTool.mvba</code>, thư viện) – được thay <strong>khi đóng MicroStation</strong>; mở lại là dùng bản mới. Không cần gỡ / cài lại.</li>
 <li>An toàn: mọi tệp tải về được kiểm tra kích thước và mã SHA-256 trước khi áp dụng; bản cũ được sao lưu vào <code>_SaoLuuCapNhat</code> trong thư mục cài; lỗi bất kỳ → tự khôi phục, không thay đổi gì.</li>
-<li>Địa chỉ máy chủ: <code>[CapNhat] MayChu</code> trong <code>QuyDinh.ini</code> / file cấu hình (tác giả cung cấp), hoặc nhập 1 lần khi bấm <em>Kiểm tra cập nhật</em>. Tắt tự kiểm tra: <code>[CapNhat] TuKiemTra = 0</code>.</li>
+<li>Địa chỉ máy chủ: <code>[CapNhat] MayChu</code> trong <code>QuyDinh.ini</code> / file cấu hình (tác giả cung cấp), hoặc nhập 1 lần khi bấm <em>Kiểm tra cập nhật</em>. Tắt tự kiểm tra: <code>[CapNhat] TuKiemTra = 0</code>. Trang tải bộ cài và máy chủ cập nhật chính thức: <strong>https://khaittdc.github.io/TienIchKTool/</strong> (máy chủ <code>…/capnhat/</code>).</li>
+<li><strong>Tên phiên bản</strong>: từ KTool 1.0 tên phiên bản hiển thị đánh số lại từ 1.0 (các bản phát triển trước là 1.17 – 1.23); máy đang dùng bản cũ vẫn nhận được cập nhật bình thường.</li>
 <li>Khóa nào bắt đầu bằng <code>+</code> trong <code>QuyDinh.ini</code> được <strong>bổ sung</strong> vào danh sách đang có (giữ mã riêng người dùng tự thêm).</li>
 </ul>
 <h3>5.32 Trợ lý AI (menu Trợ giúp &gt; Trợ lý AI)</h3>
@@ -1525,7 +1526,7 @@ Xóm 1 Phúc Lại
 <p>Chọn file .tbl → KTool gắn bảng màu cho file DGN (thay cho Settings &gt; Color Table &gt; File &gt; Open &gt; Attach) và lưu file. Chọn phạm vi <strong>Nhiều tờ</strong> để gắn cho tất cả file trong thư mục.</p>
 <h3>5.55 Vẽ nhãn quy chủ – giao diện kiểu gCadas</h3>
 <p>Mỗi trường có ô tích + <strong>số thứ tự dòng</strong> (1 = trên cùng), chia nhóm Thửa đất / Chủ sử dụng / Giấy chứng nhận; nhóm Cấu hình (lớp, màu, font, cỡ chữ, kiểu nhãn đa mục đích <code>ONT+CLN</code> / <code>ONT, CLN</code> / <code>ONT/CLN</code>, chỉ vẽ thửa trong danh sách số thửa) và Tùy chọn (nhãn đa mục đích kèm diện tích <code>ONT:200; CLN:300</code>, tên chủ + vợ/chồng, chỉ thửa có GCN, tự co nhãn trong thửa, <strong>tự xoay nhãn theo cạnh dài nhất</strong>, xóa nhãn cũ).</p>
-<h3>5.56 Thanh công cụ dạng cây thư mục (1.23.0)</h3>
+<h3>5.56 Thanh công cụ dạng cây thư mục (1.0)</h3>
 <ul>
 <li>Thanh menu còn 8 mục: <strong>Hệ thống, Chuẩn hóa, Thửa đất, Sửa nhanh, Bản đồ, Đo đạc, Tiện ích, Trợ giúp</strong>.</li>
 <li><strong>Thửa đất</strong> và <strong>Tiện ích</strong> hiển thị kiểu gCadas: menu cấp 1 gồm vài lệnh dùng nhiều (<em>Chạy quy trình</em>, <em>Bảng thông tin thửa đất</em>) và các <strong>nhóm</strong> có mũi tên ►; rê chuột (hoặc bấm) vào nhóm thì <strong>menu con</strong> mở ra bên cạnh.</li>
@@ -1533,7 +1534,7 @@ Xóm 1 Phúc Lại
 <li>Tiện ích: Text, Line, Thửa, Chuyển line về level TT26, Level, Seed, <strong>Chuyển đổi</strong> (trước đây là menu riêng: CAD, Shapefile, GML/XML, KML, MapInfo, CSV, gCadas), Tờ bản đồ, Nhật ký - CSDL thửa.</li>
 <li><strong>Tự xếp trái / phải theo chỗ trống trên màn hình</strong>: menu thả xuống không vượt mép phải màn hình (thanh công cụ nằm sát mép phải thì menu dịch sang trái); menu con mở sang <strong>phải</strong> nếu đủ chỗ, không đủ thì mở sang <strong>trái</strong>; thanh dọc neo mép phải thì menu và menu con thả sang trái. Không còn bị mất chữ ở cột cuối.</li>
 </ul>
-<h3>5.57 Bảng thông tin thửa đất dạng lưới kẻ ô (1.23.0)</h3>
+<h3>5.57 Bảng thông tin thửa đất dạng lưới kẻ ô (1.0)</h3>
 <p>Bảng thông tin thửa đất hiển thị dạng <strong>lưới kẻ ô, kẻ hàng bằng đường kẻ nhạt</strong>: dòng tiêu đề cố định (chữ đậm, nền xám nhạt), cột <strong>STT</strong>, dòng chẵn lẻ xen màu, dòng đang chọn tô sáng, độ rộng cột tự theo nội dung. Bấm 1 ô để chọn thửa (nạp thuộc tính vào khung sửa, tự phóng tới thửa nếu tích); <strong>bấm đúp</strong> để phóng tới thửa; <strong>lăn chuột</strong> hoặc kéo thanh cuộn bên phải để cuộn; bảng nhiều cột có thanh cuộn ngang. Bảng chỉ dựng ô cho các dòng đang hiện nên mở nhanh cả với tờ có hàng nghìn thửa.</p>
 <h2>6. Gợi ý thông số</h2>
 <table>

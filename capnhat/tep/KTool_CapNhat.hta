@@ -26,7 +26,7 @@ button[disabled]{opacity:.5}
 '   cho nguoi dung luu + dong MicroStation (khong tu tat) -> sao luu, thay tep -> mo lai MicroStation.
 '   Tham so: /tudong = tu kiem tra va cap nhat ngay (goi tu KTool trong MicroStation)
 Option Explicit
-Dim fso, sh, thuMuc, phienBan, qdBan, mayChu, mf, dsTep, buoc, tai, daTai, coDong, msPath, msArgs, tuDong, slDir, daChep, phienMoi, qdMoi, daNhac
+Dim tenBan, tenMoi, fso, sh, thuMuc, phienBan, qdBan, mayChu, mf, dsTep, buoc, tai, daTai, coDong, msPath, msArgs, tuDong, slDir, daChep, phienMoi, qdMoi, daNhac
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set sh = CreateObject("WScript.Shell")
 Const REG = "HKCU\Software\VB and VBA Program Settings\KTool\"
@@ -194,6 +194,7 @@ Sub KhoiDong()
   If thuMuc = "" Then thuMuc = fso.GetParentFolderName(Replace(Replace(document.location.pathname, "/", "\"), "%20", " "))
   If Left(thuMuc, 1) = "\" Then thuMuc = Mid(thuMuc, 2)
   phienBan = DocReg("CaiDat\PhienBan", "0.0.0")
+  tenBan = DocReg("CaiDat\TenPhienBan", phienBan)
   qdBan = DocReg("CapNhat\PhienBanQuyDinh", "")
   If fso.FileExists(thuMuc & "\QuyDinh.ini") Then
     Set a = DocIni(DocTepUTF8(thuMuc & "\QuyDinh.ini"))
@@ -201,7 +202,7 @@ Sub KhoiDong()
     mayChu = a("CapNhat|MayChu")
   End If
   If mayChu = "" Then mayChu = DocReg("CapNhat\MayChu", "")
-  document.getElementById("phu").innerText = "Đang dùng: KTool " & phienBan & " - quy định " & qdBan & "   |   " & thuMuc
+  document.getElementById("phu").innerText = "Đang dùng: KTool " & tenBan & " - quy định " & qdBan & "   |   " & thuMuc
   tuDong = (InStr(LCase(KToolCapNhat.commandLine), "/tudong") > 0)
   If mayChu = "" Then
     mayChu = InputBox("Địa chỉ máy chủ cập nhật KTool (thư mục web hoặc liên kết capnhat.ini, do tác giả cung cấp):", "KTool - Cập nhật", "")
@@ -225,9 +226,10 @@ Sub KiemTra()
   End If
   Set mf = DocIni(DocTepUTF8(f))
   phienMoi = mf("KTool|PhienBan"): qdMoi = mf("QuyDinh|PhienBan")
+  tenMoi = mf("KTool|TenPhienBan"): If tenMoi = "" Then tenMoi = phienMoi
   coMoi = (SoSanh(phienMoi, phienBan) > 0)
   coQD = (qdMoi <> "" And qdMoi > qdBan)
-  GhiNK "Máy chủ: KTool " & phienMoi & " - quy định " & qdMoi & IIf2(mf("KTool|Ngay") <> "", " (" & mf("KTool|Ngay") & ")", "")
+  GhiNK "Máy chủ: KTool " & tenMoi & " - quy định " & qdMoi & IIf2(mf("KTool|Ngay") <> "", " (" & mf("KTool|Ngay") & ")", "")
   If mf("QuyDinh|VanBan") <> "" Then GhiNK "Văn bản: " & mf("QuyDinh|VanBan")
   If mf("KTool|GhiChu") <> "" Then GhiNK "Nội dung: " & vbCrLf & "  - " & Replace(mf("KTool|GhiChu"), "|", vbCrLf & "  - ")
   If mf("KTool|PhienBanToiThieu") <> "" Then
@@ -336,11 +338,11 @@ Sub ApDungThat()
     Exit Sub
   End If
   On Error GoTo 0
-  If phienMoi <> "" And SoSanh(phienMoi, phienBan) > 0 Then sh.RegWrite REG & "CaiDat\PhienBan", phienMoi
+  If phienMoi <> "" And SoSanh(phienMoi, phienBan) > 0 Then sh.RegWrite REG & "CaiDat\PhienBan", phienMoi: sh.RegWrite REG & "CaiDat\TenPhienBan", tenMoi
   If qdMoi <> "" Then sh.RegWrite REG & "CapNhat\PhienBanQuyDinh", qdMoi
   sh.RegWrite REG & "CapNhat\DaApDung", phienMoi
   GhiNK "Đã cập nhật " & daChep.Count & " tệp. Bản cũ sao lưu tại: " & sl
-  DatTT "Hoàn tất: KTool " & phienMoi & " - quy định " & qdMoi: DatThanh 100
+  DatTT "Hoàn tất: KTool " & tenMoi & " - quy định " & qdMoi: DatThanh 100
   If msPath <> "" And coDong Then
     GhiNK "Mở lại MicroStation..."
     sh.Run """" & msPath & """", 1, False
