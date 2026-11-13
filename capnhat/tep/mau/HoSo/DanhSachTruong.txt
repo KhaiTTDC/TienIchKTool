@@ -1,0 +1,42 @@
+﻿KTOOL - DANH SÁCH TRƯỜNG TRONG MẪU HỒ SƠ THỬA ĐẤT (mẫu Word .docx / .dotx)
+Gõ trường bằng chữ HOA trong ngoặc nhọn, ví dụ {SOTHUA}. Trường không có dữ liệu được thay bằng chuỗi chấm
+(cấu hình [HoSo] ChuoiTrong) để điền tay.
+
+--- Thửa đất (lấy từ thuộc tính thửa; mọi trường thuộc tính khác cũng dùng được: {TEN_TRUONG}) ---
+{SOTO} {SOTHUA} {LOAIDAT} {DIENTICH} {TENCHU} {DIACHI}
+{DIACHITHUA}  địa chỉ thửa đất (trường DIACHITHUA, không có thì DIACHI)
+{DIACHICHU}   địa chỉ người sử dụng đất (trường DIACHICHU)
+{DIENTICH_DH} diện tích tính từ sơ đồ   {CHUVI} chu vi   {SODINH} số đỉnh
+{TYLE} tỷ lệ sơ đồ (1:500)   {TYLESO} 500
+
+--- Thông tin riêng từng thửa: trường thuộc tính cùng tên; không có thì lấy ở bảng chọn Xuất hồ sơ ---
+{HINHTHUC} {LOAIGIAYTO} {DTGIAYTO} {LDGIAYTO} {THAYDOI} {GCN} {THOIHAN} {NGUONGOC}
+{DTSAUCL} (PL17 mục 7)  {THONGTINKHAC} (PL19 mục 6)  {TAISAN} {GHICHU} {MAGCN} {SOVAOSO} {GIAYTONHANTHAN} {MUCDICH}
+
+--- Thông tin chung (lệnh Thông tin chung hồ sơ thửa đất) ---
+{DONVIDO} {NGUOIDODAC} {DUAN} {DIADANH} {TAILIEUDO} {COQUANTL} {NGUOITL} {VPDK}
+
+--- Đơn vị hành chính (lệnh Đơn vị hành chính và kinh tuyến trục) ---
+{XA} {XAHOA} {HUYEN} {TINH} {TINHHUYEN} {COQUANDUYET}
+{KTT} kinh tuyến trục   {HETOADO} "VN-2000, kinh tuyến trục ..., múi chiếu 3°"
+
+--- Ngày tháng ---
+{NGAY} {THANG} {NAM} {NGAYTHANG} ("ngày 10 tháng 11 năm 2026") {NGAYSO} (10/11/2026)
+
+--- Đối tượng đặc biệt ---
+{SO_DO}            hình sơ đồ hình thể (EMF vector), rộng mặc định theo khung sơ đồ
+{SO_DO:90x80}      hình sơ đồ rộng 90 mm, cao tối đa 80 mm
+{BANG_TOA_DO}      bảng tọa độ đỉnh thửa + kích thước cạnh theo mẫu TT 26/2024 (cạnh nằm giữa 2 đỉnh)
+{BANG_TOA_DO_DON}  bảng mỗi đỉnh 1 dòng      {BANG_TOA_DO:80}  bảng rộng 80 mm
+{BANG_LIEN_KE}     bảng ký xác nhận của người sử dụng đất liền kề (PL 12)
+{MOTA_RANH}        các dòng "- Từ điểm 1 đến điểm 2: dài ... m, giáp thửa số ..." (PL 12)
+
+--- Bảng tự thiết kế (dòng mẫu được lặp cho từng đỉnh) ---
+Đặt trong 1 dòng của bảng: {D_STT} {D_TEN} {D_X} {D_Y} {D_CANH} {D_TENCANH} {D_GIAP}
+(X = hướng Bắc, Y = hướng Đông theo VN-2000). Bảng chứa dòng lặp không được có ô gộp theo chiều dọc;
+muốn tiêu đề nhiều tầng thì đặt tiêu đề ở 1 bảng riêng ngay phía trên.
+
+--- Thay mẫu ---
+Chép file mẫu trong thư mục này sang thư mục MauHoSo cạnh file DGN, giữ nguyên tên file, sửa theo mẫu
+của đơn vị. KTool tự dùng mẫu trong MauHoSo. Mọi file Word khác đặt trong MauHoSo được điền như
+"biểu mẫu khác" khi tích mục tương ứng ở bảng chọn Xuất hồ sơ.
