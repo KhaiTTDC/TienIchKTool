@@ -1,0 +1,385 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=9">
+<title>KTool - Cập nhật</title>
+<HTA:APPLICATION ID="KToolCapNhat" APPLICATIONNAME="KToolCapNhat" BORDER="dialog" MAXIMIZEBUTTON="no" MINIMIZEBUTTON="yes"
+  SCROLL="no" SINGLEINSTANCE="yes" SYSMENU="yes" ICON="mshta.exe" CONTEXTMENU="no" SELECTION="no">
+<style>
+body{font-family:Segoe UI,Tahoma,Arial;font-size:13px;margin:0;background:#f5faff;color:#0c3a5a}
+#dau{background:#0291d7;color:#fff;padding:12px 16px}
+#dau b{font-size:17px}
+#dau span{display:block;font-size:12px;color:#d6efff;margin-top:2px}
+#than{padding:12px 16px}
+.hop{background:#fff;border:1px solid #bad6eb;padding:8px 10px;margin-bottom:10px}
+#tt{font-weight:bold;margin-bottom:6px}
+#thanhngoai{height:16px;border:1px solid #8fc3e6;background:#fff}
+#thanh{height:16px;width:0%;background:#0ea5e9}
+#nk{height:150px;overflow:auto;font-family:Consolas,monospace;font-size:12px;white-space:pre-wrap;background:#fff;border:1px solid #bad6eb;padding:6px}
+button{font-family:Segoe UI;font-size:13px;padding:5px 16px;margin-right:6px;border:1px solid #0291d7;background:#fff;color:#0369a1}
+button.chinh{background:#0291d7;color:#fff;font-weight:bold}
+button[disabled]{opacity:.5}
+</style>
+<script language="VBScript">
+' KTool - trinh cap nhat doc lap (chay bang mshta.exe, khong can MicroStation mo)
+'   Giong trinh CapNhat cua gCadas: doc file cau hinh tren may chu -> so phien ban -> tai tep ->
+'   cho nguoi dung luu + dong MicroStation (khong tu tat) -> sao luu, thay tep -> mo lai MicroStation.
+'   Tham so: /tudong = tu kiem tra va cap nhat ngay (goi tu KTool trong MicroStation)
+Option Explicit
+Dim tenBan, tenMoi, fso, sh, thuMuc, phienBan, qdBan, mayChu, mf, dsTep, buoc, tai, daTai, coDong, msPath, msArgs, tuDong, slDir, daChep, phienMoi, qdMoi, daNhac
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set sh = CreateObject("WScript.Shell")
+Const REG = "HKCU\Software\VB and VBA Program Settings\KTool\"
+
+Function DocReg(k, macDinh)
+  On Error Resume Next
+  DocReg = sh.RegRead(REG & k)
+  If Err.Number <> 0 Or IsEmpty(DocReg) Then DocReg = macDinh
+End Function
+
+Sub GhiNK(s)
+  document.getElementById("nk").innerText = document.getElementById("nk").innerText & s & vbCrLf
+  document.getElementById("nk").scrollTop = 100000
+End Sub
+Sub DatTT(s)
+  document.getElementById("tt").innerText = s
+End Sub
+Sub DatThanh(pt)
+  document.getElementById("thanh").style.width = CInt(pt) & "%"
+End Sub
+
+Function DocTepUTF8(p)
+  Dim st
+  Set st = CreateObject("ADODB.Stream")
+  st.Type = 2: st.Charset = "utf-8": st.Open: st.LoadFromFile p
+  DocTepUTF8 = st.ReadText(-1): st.Close
+End Function
+
+Function DocIni(txt)
+  Dim d, L, i, t, sec, p
+  Set d = CreateObject("Scripting.Dictionary")
+  d.CompareMode = 1
+  L = Split(Replace(txt, vbCr, ""), vbLf)
+  For i = 0 To UBound(L)
+    t = Trim(L(i))
+    If Left(t, 1) = "[" And Right(t, 1) = "]" Then
+      sec = Mid(t, 2, Len(t) - 2)
+    ElseIf t <> "" And Left(t, 1) <> ";" Then
+      p = InStr(t, "=")
+      If p > 1 Then d(sec & "|" & Trim(Left(t, p - 1))) = Trim(Mid(t, p + 1))
+    End If
+  Next
+  Set DocIni = d
+End Function
+
+Function SoSanh(a, b)
+  Dim x, y, i, va, vb
+  x = Split(a & ".0.0.0", "."): y = Split(b & ".0.0.0", ".")
+  SoSanh = 0
+  For i = 0 To 3
+    va = CLng("0" & x(i)): vb = CLng("0" & y(i))
+    If va > vb Then SoSanh = 1: Exit Function
+    If va < vb Then SoSanh = -1: Exit Function
+  Next
+End Function
+
+Function LaLienKetTep(s)
+  Dim t: t = LCase(s)
+  LaLienKetTep = (InStr(t, ".ini") > 0 Or InStr(t, "?") > 0 Or InStr(t, "dropbox") > 0 Or InStr(t, "drive.google") > 0 Or InStr(t, ".gif") > 0 Or InStr(t, ".txt") > 0)
+End Function
+Function UrlManifest(u)
+  If LaLienKetTep(u) Then UrlManifest = u Else UrlManifest = u & "capnhat.ini"
+End Function
+Function UrlTep(u, rel)
+  Dim b, p
+  If LCase(Left(rel, 4)) = "http" Then UrlTep = rel: Exit Function
+  b = u
+  If LaLienKetTep(b) Then
+    p = InStr(b, "?"): If p > 0 Then b = Left(b, p - 1)
+    b = Left(b, InStrRev(b, "/"))
+  End If
+  UrlTep = b & rel
+End Function
+
+Function TaiVe(url, dich)
+  Dim h, st
+  TaiVe = False
+  On Error Resume Next
+  Set h = CreateObject("WinHttp.WinHttpRequest.5.1")
+  h.SetTimeouts 15000, 15000, 30000, 300000
+  h.Open "GET", url, False
+  h.SetRequestHeader "User-Agent", "KTool-CapNhat/" & phienBan
+  h.Send
+  If Err.Number <> 0 Then Exit Function
+  If h.Status <> 200 Then Exit Function
+  TaoCha dich
+  Set st = CreateObject("ADODB.Stream")
+  st.Type = 1: st.Open: st.Write h.ResponseBody
+  If fso.FileExists(dich) Then fso.DeleteFile dich, True
+  st.SaveToFile dich, 2: st.Close
+  TaiVe = (Err.Number = 0)
+End Function
+
+Sub TaoCha(p)
+  Dim d: d = fso.GetParentFolderName(p)
+  If d = "" Then Exit Sub
+  If Not fso.FolderExists(d) Then TaoCha d: fso.CreateFolder d
+End Sub
+
+Function BamTep(p)
+  Dim t, L, i, s, ex
+  t = sh.ExpandEnvironmentStrings("%TEMP%") & "\ktool_bam.txt"
+  sh.Run "cmd /c certutil -hashfile """ & p & """ SHA256 > """ & t & """", 0, True
+  BamTep = ""
+  If Not fso.FileExists(t) Then Exit Function
+  L = Split(fso.OpenTextFile(t).ReadAll, vbCrLf)
+  For i = 0 To UBound(L)
+    s = LCase(Replace(Trim(L(i)), " ", ""))
+    If Len(s) = 64 Then
+      Set ex = New RegExp: ex.Pattern = "^[0-9a-f]{64}$"
+      If ex.Test(s) Then BamTep = s: Exit For
+    End If
+  Next
+  fso.DeleteFile t, True
+End Function
+
+Function GiaiNen(zipF, dich)
+  Dim sa, src, dst, n, t0
+  On Error Resume Next
+  If Not fso.FolderExists(dich) Then TaoCha dich & "\x": fso.CreateFolder dich
+  Set sa = CreateObject("Shell.Application")
+  Set src = sa.NameSpace(CStr(zipF)): Set dst = sa.NameSpace(CStr(dich))
+  n = src.Items.Count
+  dst.CopyHere src.Items, 4 + 16 + 512 + 1024
+  t0 = Timer
+  Do While dst.Items.Count < n And Timer - t0 < 300
+    sh.Run "cmd /c ping -n 2 127.0.0.1 > nul", 0, True
+  Loop
+  GiaiNen = (Err.Number = 0 And dst.Items.Count >= n)
+End Function
+
+Sub ThemThuMuc(rel)
+  Dim fo, f, sf
+  Set fo = fso.GetFolder(tai & "\" & rel)
+  For Each f In fo.Files
+    dsTep.Add dsTep.Count, rel & "\" & f.Name & "|NGAY"
+  Next
+  For Each sf In fo.SubFolders
+    ThemThuMuc rel & "\" & sf.Name
+  Next
+End Sub
+
+Function DichTep(rel)
+  DichTep = thuMuc & "\" & Replace(rel, "/", "\")
+End Function
+
+' --- MicroStation dang chay? (luu duong dan de mo lai) ---
+Function MSDangChay()
+  Dim wmi, ds, p
+  MSDangChay = False
+  On Error Resume Next
+  Set wmi = GetObject("winmgmts:\\.\root\cimv2")
+  Set ds = wmi.ExecQuery("select * from Win32_Process where Name='ustation.exe' or Name='microstation.exe' or Name='powerdraft.exe'")
+  For Each p In ds
+    MSDangChay = True
+    If msPath = "" Then msPath = p.ExecutablePath: msArgs = ""
+  Next
+End Function
+
+
+Sub KhoiDong()
+  Dim a
+  window.resizeTo 620, 520
+  thuMuc = DocReg("CaiDat\ThuMuc", "")
+  If thuMuc = "" Then thuMuc = fso.GetParentFolderName(Replace(Replace(document.location.pathname, "/", "\"), "%20", " "))
+  If Left(thuMuc, 1) = "\" Then thuMuc = Mid(thuMuc, 2)
+  phienBan = DocReg("CaiDat\PhienBan", "0.0.0")
+  tenBan = DocReg("CaiDat\TenPhienBan", phienBan)
+  qdBan = DocReg("CapNhat\PhienBanQuyDinh", "")
+  If fso.FileExists(thuMuc & "\QuyDinh.ini") Then
+    Set a = DocIni(DocTepUTF8(thuMuc & "\QuyDinh.ini"))
+    If a("QuyDinh|PhienBan") <> "" Then qdBan = a("QuyDinh|PhienBan")
+    mayChu = a("CapNhat|MayChu")
+  End If
+  If mayChu = "" Then mayChu = DocReg("CapNhat\MayChu", "")
+  document.getElementById("phu").innerText = "Đang dùng: KTool " & tenBan & " - quy định " & qdBan & "   |   " & thuMuc
+  tuDong = (InStr(LCase(KToolCapNhat.commandLine), "/tudong") > 0)
+  If mayChu = "" Then
+    mayChu = InputBox("Địa chỉ máy chủ cập nhật KTool (thư mục web hoặc liên kết capnhat.ini, do tác giả cung cấp):", "KTool - Cập nhật", "")
+    If Trim(mayChu) = "" Then DatTT "Chưa có địa chỉ máy chủ cập nhật.": Exit Sub
+    sh.RegWrite REG & "CapNhat\MayChu", Trim(mayChu)
+  End If
+  mayChu = Trim(mayChu)
+  If Not LaLienKetTep(mayChu) And Right(mayChu, 1) <> "/" Then mayChu = mayChu & "/"
+  window.setTimeout "KiemTra", 300, "VBScript"
+End Sub
+
+Sub KiemTra()
+  Dim f, coMoi, coQD
+  document.getElementById("btnCN").disabled = True
+  DatTT "Đang kiểm tra máy chủ...": DatThanh 3
+  tai = sh.ExpandEnvironmentStrings("%APPDATA%") & "\KTool\capnhat"
+  If Not fso.FolderExists(tai) Then TaoCha tai & "\x": fso.CreateFolder tai
+  f = tai & "\capnhat.ini"
+  If Not TaiVe(UrlManifest(mayChu), f) Then
+    DatTT "Không kết nối được máy chủ cập nhật.": GhiNK "Lỗi tải " & UrlManifest(mayChu) & " - kiểm tra internet / tường lửa / proxy.": DatThanh 0: Exit Sub
+  End If
+  Set mf = DocIni(DocTepUTF8(f))
+  phienMoi = mf("KTool|PhienBan"): qdMoi = mf("QuyDinh|PhienBan")
+  tenMoi = mf("KTool|TenPhienBan"): If tenMoi = "" Then tenMoi = phienMoi
+  coMoi = (SoSanh(phienMoi, phienBan) > 0)
+  coQD = (qdMoi <> "" And qdMoi > qdBan)
+  GhiNK "Máy chủ: KTool " & tenMoi & " - quy định " & qdMoi & IIf2(mf("KTool|Ngay") <> "", " (" & mf("KTool|Ngay") & ")", "")
+  If mf("QuyDinh|VanBan") <> "" Then GhiNK "Văn bản: " & mf("QuyDinh|VanBan")
+  If mf("KTool|GhiChu") <> "" Then GhiNK "Nội dung: " & vbCrLf & "  - " & Replace(mf("KTool|GhiChu"), "|", vbCrLf & "  - ")
+  If mf("KTool|PhienBanToiThieu") <> "" Then
+    If SoSanh(phienBan, mf("KTool|PhienBanToiThieu")) < 0 Then
+      DatTT "Bản đang dùng quá cũ - hãy cài bằng bộ cài mới nhất.": DatThanh 0: Exit Sub
+    End If
+  End If
+  If Not coMoi And Not coQD Then DatTT "KTool và bộ quy định đã là mới nhất.": DatThanh 100: Exit Sub
+  DatTT "Có bản cập nhật mới. Bấm 'Cập nhật' để tải và cài.": DatThanh 0
+  document.getElementById("btnCN").disabled = False
+  If tuDong Then window.setTimeout "BatDau", 500, "VBScript"
+End Sub
+
+Function IIf2(c, a, b)
+  If c Then IIf2 = a Else IIf2 = b
+End Function
+
+Sub BatDau()
+  Dim i, k
+  document.getElementById("btnCN").disabled = True
+  Set dsTep = CreateObject("Scripting.Dictionary")
+  tai = sh.ExpandEnvironmentStrings("%APPDATA%") & "\KTool\capnhat\" & Replace(phienMoi, ".", "_")
+  If fso.FolderExists(tai) Then fso.DeleteFolder tai, True
+  TaoCha tai & "\x": fso.CreateFolder tai
+  buoc = 1: daTai = 0: coDong = False
+  window.setTimeout "TaiTiep", 50, "VBScript"
+End Sub
+
+' tai lan luot tung tep (setTimeout de cap nhat giao dien)
+Sub TaiTiep()
+  Dim k, v, rel, kieu, dl, bam, tong
+  k = mf("TepTin|" & buoc)
+  If k = "" Then
+    window.setTimeout "ApDung", 50, "VBScript": Exit Sub
+  End If
+  tong = 0
+  Do While mf("TepTin|" & (tong + 1)) <> "": tong = tong + 1: Loop
+  v = Split(k & "||||", "|")
+  rel = Trim(v(0)): kieu = UCase(Trim(v(4)))
+  dl = tai & "\" & Replace(rel, "/", "\")
+  If kieu = "ZIP" Then dl = dl & ".zip"
+  DatTT "Tải " & rel & " (" & buoc & "/" & tong & ")": DatThanh 5 + 75 * (buoc - 1) / tong
+  If Not TaiVe(UrlTep(mayChu, Trim(v(1))), dl) Then GhiNK "LỖI tải " & rel & " - hủy, chưa thay đổi gì.": DatTT "Cập nhật bị hủy.": Exit Sub
+  If Val(v(3)) > 0 Then
+    If fso.GetFile(dl).Size <> CDbl(v(3)) Then GhiNK "LỖI kích thước " & rel & " - hủy.": DatTT "Cập nhật bị hủy.": Exit Sub
+  End If
+  If Len(Trim(v(2))) = 64 Then
+    bam = BamTep(dl)
+    If bam <> "" And bam <> LCase(Trim(v(2))) Then GhiNK "LỖI mã SHA-256 " & rel & " - hủy.": DatTT "Cập nhật bị hủy.": Exit Sub
+  End If
+  If kieu = "ZIP" Then
+    If Not GiaiNen(dl, tai & "\" & Replace(rel, "/", "\")) Then GhiNK "LỖI giải nén " & rel: DatTT "Cập nhật bị hủy.": Exit Sub
+    ThemThuMuc Replace(rel, "/", "\")
+  Else
+    dsTep.Add dsTep.Count, rel & "|" & kieu
+    If kieu = "DONG" Then coDong = True
+  End If
+  GhiNK "Đã tải " & rel
+  daTai = daTai + 1: buoc = buoc + 1
+  window.setTimeout "TaiTiep", 20, "VBScript"
+End Sub
+
+Function Val(s)
+  If IsNumeric(s) Then Val = CDbl(s) Else Val = 0
+End Function
+
+Sub ApDung()
+  ' tep chuong trinh: MicroStation phai dong. KHONG tu tat MicroStation (tranh mat ban ve chua luu):
+  ' nhac nguoi dung luu + dong, trinh cap nhat tu cho roi ap dung
+  If coDong And MSDangChay() Then
+    DatTT "Hãy LƯU bản vẽ và ĐÓNG MicroStation - cập nhật sẽ tự tiếp tục khi MicroStation đóng."
+    If Not daNhac Then
+      daNhac = True
+      GhiNK "Chờ MicroStation đóng để thay chương trình KTool (tệp đã tải xong, bản cũ chưa bị thay đổi)."
+    End If
+    window.setTimeout "ApDung", 2000, "VBScript"
+    Exit Sub
+  End If
+  ApDungThat
+End Sub
+
+Sub ApDungThat()
+  Dim i, x, rel, d, sl, loi
+  ' sao luu + chep, loi thi khoi phuc
+  sl = thuMuc & "\_SaoLuuCapNhat\" & Replace(phienBan, ".", "_") & "_" & Year(Now) & Right("0" & Month(Now), 2) & Right("0" & Day(Now), 2) & "_" & Right("0" & Hour(Now), 2) & Right("0" & Minute(Now), 2)
+  Set daChep = CreateObject("Scripting.Dictionary")
+  DatTT "Đang áp dụng cập nhật...": DatThanh 85
+  On Error Resume Next
+  For Each x In dsTep.Items
+    rel = Replace(Split(x, "|")(0), "/", "\")
+    d = DichTep(rel)
+    TaoCha d
+    If fso.FileExists(d) Then TaoCha sl & "\" & rel: fso.CopyFile d, sl & "\" & rel, True
+    Err.Clear
+    fso.CopyFile tai & "\" & rel, d, True
+    If Err.Number <> 0 Then loi = rel & ": " & Err.Description: Exit For
+    daChep.Add daChep.Count, rel
+  Next
+  If loi <> "" Then
+    Err.Clear
+    For Each x In daChep.Items
+      If fso.FileExists(sl & "\" & x) Then fso.CopyFile sl & "\" & x, DichTep(x), True Else fso.DeleteFile DichTep(x), True
+    Next
+    GhiNK "LỖI chép " & loi & " - đã khôi phục bản cũ."
+    DatTT "Cập nhật lỗi, đã khôi phục bản cũ.": DatThanh 0
+    Exit Sub
+  End If
+  On Error GoTo 0
+  If phienMoi <> "" And SoSanh(phienMoi, phienBan) > 0 Then sh.RegWrite REG & "CaiDat\PhienBan", phienMoi: sh.RegWrite REG & "CaiDat\TenPhienBan", tenMoi
+  If qdMoi <> "" Then sh.RegWrite REG & "CapNhat\PhienBanQuyDinh", qdMoi
+  sh.RegWrite REG & "CapNhat\DaApDung", phienMoi
+  GhiNK "Đã cập nhật " & daChep.Count & " tệp. Bản cũ sao lưu tại: " & sl
+  DatTT "Hoàn tất: KTool " & tenMoi & " - quy định " & qdMoi: DatThanh 100
+  If msPath <> "" And coDong Then
+    GhiNK "Mở lại MicroStation..."
+    sh.Run """" & msPath & """", 1, False
+  End If
+End Sub
+
+Function MSDangChay2()
+  Dim wmi, ds
+  On Error Resume Next
+  Set wmi = GetObject("winmgmts:\\.\root\cimv2")
+  Set ds = wmi.ExecQuery("select * from Win32_Process where Name='ustation.exe' or Name='microstation.exe' or Name='powerdraft.exe'")
+  MSDangChay2 = (ds.Count > 0)
+End Function
+
+Sub DoiMayChu()
+  Dim s
+  s = InputBox("Địa chỉ máy chủ cập nhật (thư mục web hoặc liên kết capnhat.ini):", "KTool - Cập nhật", mayChu)
+  If Trim(s) = "" Then Exit Sub
+  sh.RegWrite REG & "CapNhat\MayChu", Trim(s)
+  mayChu = Trim(s)
+  If Not LaLienKetTep(mayChu) And Right(mayChu, 1) <> "/" Then mayChu = mayChu & "/"
+  document.getElementById("nk").innerText = ""
+  KiemTra
+End Sub
+</script>
+</head>
+<body onload="KhoiDong">
+<div id="dau"><b>KTool - Cập nhật quy định và chức năng mới</b><span id="phu"></span></div>
+<div id="than">
+  <div class="hop"><div id="tt">Đang khởi động...</div><div id="thanhngoai"><div id="thanh"></div></div></div>
+  <div id="nk"></div>
+  <div style="margin-top:10px">
+    <button id="btnCN" class="chinh" onclick="BatDau" disabled>Cập nhật</button>
+    <button onclick="document.getElementById('nk').innerText='': KiemTra">Kiểm tra lại</button>
+    <button onclick="DoiMayChu">Máy chủ...</button>
+    <button onclick="window.close">Đóng</button>
+  </div>
+</div>
+</body>
+</html>

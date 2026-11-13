@@ -1,0 +1,6 @@
+﻿BẢNG KẾT QUẢ ĐO ĐẠC - TỌA ĐỘ ĐỈNH THỬA ĐẤT
+Tờ bản đồ số: {SOTO};Thửa đất số: {SOTHUA};Diện tích: {DIENTICH} m2;Loại đất: {LOAIDAT}
+Người sử dụng đất: {TENCHU}
+STT;Số hiệu điểm;X (m);Y (m);Cao độ H (m);Mã;Cạnh;Chiều dài cạnh (m)
+{STT};{TEN};{X};{Y};{H};{MA};{TENCANH};{CANH}
+Chu vi: {CHUVI} m;Số điểm: {SODIEM};Ngày lập: {NGAY}
