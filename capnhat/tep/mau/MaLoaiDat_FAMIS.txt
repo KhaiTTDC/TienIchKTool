@@ -1,0 +1,59 @@
+﻿# Bang quy doi ky hieu loai dat cu (FAMIS, nhan ban do dia chinh cu) -> ma loai dat moi (TT 08/2024/TT-BTNMT)
+# Moi dong: MaFamis,KyHieuCu,MaMoi   (MaFamis = ma so loai dat trong FAMIS; KyHieuCu = chu ghi tren nhan)
+# Ky hieu trung nhau (T: ODT / ONT) -> KTool chon theo don vi hanh chinh (phuong, thi tran: ODT; xa: ONT)
+# Ma moi co dau ? o cuoi = can xem xet, KTool giu nguyen va bao lai. Sua / them dong tuy y (luu UTF-8).
+5,3L,LUC
+6,2L,LUC
+7,1L,LUK
+8,Mạ,LUK
+10,L/n,LUK
+11,ĐRM/n,HNK
+13,ĐM,HNK
+14,Rau,HNK
+15,Cói,HNK
+16,HN.k,HNK
+17,vườn,HNK
+19,CN,CLN
+20,Q,CLN
+21,LN.k,CLN
+22,Ư. LN,NKH
+24,Cỏ.t,HNK
+25,Cỏ.tn,HNK
+26,Ao.c,NTS
+27,Ao(Hồ).c,NTS
+28,Ao(Hồ).t,NTS
+29,Ao(Hồ).k,NTS
+32,R.Tn.S,RSK
+33,R.Tn.P,RPK
+34,R.Tn.Đ,RDK
+36,R.T.S,RSM
+37,R.T.P,RPM
+38,R.T.Đ,RDM
+39,Ư.R,NKH
+41,XD,TSC
+42,GT,DGT
+43,TL,DTL
+44,DT,TON
+45,AN/QP,QPH
+46,KT.KS,SKS
+47,VLXD,SKS
+48,Muối,LMU
+49,NĐ,NTD
+50,CDK,CTN
+52,T,ODT
+53,T,ONT
+55,Hg/b,BCS
+56,Hg/đn,DCS
+57,MN/hg,MNC
+58,Sg(suối),SON
+59,N/đá,NCS
+60,Khác,BCS
+1752,T+vườn,ODT+HNK
+1752,vườn+T,ODT+HNK
+5208,T+Mạ,ODT+LUK
+5213,T+Màu,ODT+HNK
+5217,T+vườn,ODT+HNK
+5219,T+CN,ODT+CLN
+5220,T+q,ODT+CLN
+5221,T+LN.k,ODT+CLN
+5317,T+vườn,ONT+HNK

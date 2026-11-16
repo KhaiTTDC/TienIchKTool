@@ -753,6 +753,25 @@ table.tt td:first-child{background:#f4f7fa;color:var(--phu);width:38%}
 .seg button{flex:1;border:0;background:none;padding:7px 4px;border-radius:7px;font-size:13.5px;color:var(--xanh)}
 .seg button.on{background:#fff;font-weight:650;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 svg.hinh{width:100%;height:190px;background:#fbfcfe;border:1px solid var(--ke2);border-radius:8px;margin-top:8px}
+/* diem dieu tra */
+.ghim{background:none;border:0}
+.ghim div{position:relative;width:26px;height:34px}
+.ghim svg{width:26px;height:34px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.ghim span{position:absolute;left:24px;top:2px;white-space:nowrap;font:700 11.5px/1.2 -apple-system,Arial,sans-serif;color:#b71c1c;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+#hopGhim{position:absolute;left:8px;right:60px;bottom:10px;z-index:1000;background:rgba(255,255,255,.96);border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.18);padding:8px 10px;font-size:13px}
+.diem{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--ke2);border-radius:12px;padding:9px;margin-bottom:8px}
+.diem .anh0{width:64px;height:64px;border-radius:8px;object-fit:cover;background:#eef2f6;flex:0 0 64px;display:flex;align-items:center;justify-content:center;color:#9fb1c4;font-size:11px}
+.diem .nd{flex:1;min-width:0}
+.diem .nd b{font-size:15px;color:var(--xanh)}
+.diem .nd div{font-size:12.5px;color:var(--phu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.luoianh{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.luoianh .o{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#eef2f6}
+.luoianh img{width:100%;height:100%;object-fit:cover;display:block}
+.luoianh button{position:absolute;right:3px;top:3px;width:26px;height:26px;border-radius:13px;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:15px;line-height:26px;padding:0}
+#xemAnh{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:4000;display:flex;align-items:center;justify-content:center}
+#xemAnh img{max-width:100%;max-height:100%}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:8px}
+.chk input{width:auto}
 </style>
 </head>
 <body>
@@ -794,13 +813,41 @@ svg.hinh{width:100%;height:190px;background:#fbfcfe;border:1px solid var(--ke2);
     <div id="map"></div>
     <div id="hopGPS" class="an"></div>
     <div id="hopDo" class="an"></div>
+    <div id="hopGhim" class="an"></div>
     <div class="chonnen an" id="chonNen"></div>
     <div class="nutmap" style="right:8px;top:8px">
       <button onclick="batNen()" title="Bản đồ nền"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></button>
       <button id="nutGPS" onclick="batGPS()" title="Vị trí của tôi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
+      <button id="nutGhim" onclick="batGhim()" title="Ghim điểm định vị"><svg viewBox="0 0 24 24"><path d="M12 22s7-7.2 7-12.5A7 7 0 0 0 5 9.5C5 14.8 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.6"/></svg></button>
       <button id="nutDo" onclick="batDo()" title="Đo khoảng cách, diện tích"><svg viewBox="0 0 24 24"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></button>
       <button onclick="xemToanBo()" title="Xem toàn bộ"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
     </div>
+  </section>
+
+  <!-- DIEM DIEU TRA -->
+  <section class="view" id="v-diem">
+    <div class="card">
+      <h2>Điểm điều tra hiện trạng</h2>
+      <div class="hang">
+        <button class="nut" onclick="ghimGPS()">Ghim vị trí GPS</button>
+        <button class="nut phu" onclick="moTab('bando');if(!mGhim.bat)batGhim()">Ghim trên bản đồ</button>
+      </div>
+      <div class="ghichu">Ghim điểm (điểm phẫu diện, điểm điều tra), nhập tên điểm, loại cây, loại đất hiện trạng, ghi chú và chụp ảnh. Dữ liệu lưu trên máy, dùng được khi mất mạng.</div>
+    </div>
+    <div class="card">
+      <h2>Xuất dữ liệu</h2>
+      <label class="nho">Hệ tọa độ của Shapefile</label>
+      <select id="xuatHT"><option value="vn">VN-2000 (theo kinh tuyến trục đang dùng) – mở trên MicroStation qua KTool</option><option value="wgs">WGS84 (độ) – Google Earth, QGIS</option></select>
+      <div class="hang" style="margin-top:8px">
+        <button class="nut" onclick="xuatGoi()">Xuất Shapefile + ảnh (.zip)</button>
+        <button class="nut phu" onclick="xuatCSV()">Xuất bảng CSV</button>
+      </div>
+      <div class="ghichu">Gói .zip gồm <b>DiemDieuTra.shp/.shx/.dbf/.prj/.cpg</b> (điểm kèm đủ thuộc tính), <b>DiemDieuTra.csv</b>, <b>DiemDieuTra.kml</b> và thư mục <b>anh</b>. Trên máy tính: KTool &gt; Tiện ích &gt; <b>Nhập điểm điều tra từ KTool Mobile</b> (chọn thẳng file .zip) để vẽ điểm vào MicroStation; hoặc mở Shapefile bằng QGIS / ArcGIS.</div>
+    </div>
+    <div class="thanhcong"><input id="timDiem" type="search" placeholder="Tìm tên điểm, loại cây, loại đất, ghi chú…" oninput="veDSDiem()"></div>
+    <div class="thongke" id="tkDiem"></div>
+    <div id="dsDiem"></div>
+    <div style="text-align:center;margin-top:6px"><button class="nut phu nho an" id="nutXoaHetDiem" onclick="xoaHetDiem()">Xóa tất cả điểm</button></div>
   </section>
 
   <!-- TOA DO -->
@@ -878,21 +925,34 @@ svg.hinh{width:100%;height:190px;background:#fbfcfe;border:1px solid var(--ke2);
       <div class="ghichu">Tọa độ VN-2000 rõ ràng (X Bắc 1.000.000–2.700.000, Y Đông 100.000–900.000) được tự nhận đúng chiều dù nhập theo thứ tự nào.</div>
     </div>
     <div class="card">
+      <h2>Ảnh hiện trạng</h2>
+      <label class="chk"><input type="checkbox" id="cdDongDau" onchange="mCD.dongDau=this.checked;luuLS('caidat',mCD)"> Ghi tên điểm, thời gian, tọa độ lên ảnh chụp</label>
+      <label class="nho">Kích thước ảnh lưu (cạnh dài)</label>
+      <select id="cdCoAnh" onchange="mCD.coAnh=+this.value;luuLS('caidat',mCD)"><option value="1280">1280 px (nhẹ)</option><option value="1600">1600 px</option><option value="2048">2048 px (rõ, nặng)</option></select>
+      <label class="nho">Tiền tố tên điểm tự đặt</label>
+      <input id="cdTienTo" placeholder="P" onchange="mCD.tienTo=this.value.trim();luuLS('caidat',mCD)">
+    </div>
+    <div class="card">
       <h2>Cài lên màn hình chính iPhone</h2>
       <div class="ghichu" style="font-size:13.5px;color:var(--chu)">Mở trang bằng <b>Safari</b> → nút <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>. Biểu tượng KTool sẽ mở như một ứng dụng, chạy được khi mất mạng (trừ bản đồ nền chưa xem). Dữ liệu .ktb đã mở được giữ lại trên máy cho lần sau.</div>
       <div class="ghichu" id="ttCheDo"></div>
     </div>
-    <div class="ghichu" style="text-align:center">KTool Mobile 1.0 – © Nguyễn Hoàng Khải. Công cụ tra cứu hiện trường đi kèm KTool cho MicroStation.</div>
+    <div class="ghichu" style="text-align:center">KTool Mobile 1.1 – © Nguyễn Hoàng Khải. Công cụ tra cứu hiện trường đi kèm KTool cho MicroStation.</div>
   </section>
 </main>
 
 <nav>
   <button class="on" data-tab="thua" onclick="moTab('thua')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/></svg>Thửa đất</button>
   <button data-tab="bando" onclick="moTab('bando')"><svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Bản đồ</button>
+  <button data-tab="diem" onclick="moTab('diem')"><svg viewBox="0 0 24 24"><path d="M12 22s7-7.2 7-12.5A7 7 0 0 0 5 9.5C5 14.8 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.6"/></svg>Điểm</button>
   <button data-tab="toado" onclick="moTab('toado')"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><circle cx="14" cy="10" r="2.5"/><path d="M14 4v3.5M14 12.5V20M20 10h-3.5M11.5 10H4"/></svg>Tọa độ</button>
   <button data-tab="caidat" onclick="moTab('caidat')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Cài đặt</button>
 </nav>
 
+<input type="file" id="fileAnhCam" accept="image/*" capture="environment" class="an">
+<input type="file" id="fileAnhTV" accept="image/*" multiple class="an">
+<datalist id="dlCay"></datalist><datalist id="dlDat"></datalist>
+<div id="xemAnh" class="an" onclick="this.classList.add('an')"><img alt=""></div>
 <div id="sheet"><div class="dau"><b id="shTieuDe"></b><button class="nut phu nho" onclick="dongSheet()">Đóng</button></div><div class="than" id="shThan"></div></div>
 
 <script>/* @preserve
@@ -1067,7 +1127,7 @@ function trongDaGiac(x, y, v) {
 function phuongVi(a, b) { let g = Math.atan2(b[0] - a[0], b[1] - a[1]) * R2D; if (g < 0) g += 360; const d = Math.floor(g), m = Math.floor((g - d) * 60), s = Math.round(((g - d) * 60 - m) * 60); return d + '°' + String(m).padStart(2, '0') + "'" + String(s).padStart(2, '0') + '"'; }
 
 /* ======================= CAI DAT ======================= */
-const mCD = Object.assign({tinh: '56', ktt: 108.25, mui: 3, xy: 'VN', nen: 'osm'}, docLS('caidat', {}));
+const mCD = Object.assign({tinh: '56', ktt: 108.25, mui: 3, xy: 'VN', nen: 'osm', dongDau: true, coAnh: 1600, tienTo: 'P'}, docLS('caidat', {}));
 let mKTTFile = null;            // KTT doc tu .ktb
 function KTT() { const lon0 = mKTTFile ? mKTTFile.lon0 : mCD.ktt, mui = mKTTFile ? mKTTFile.mui : mCD.mui; return {lon0, k0: mui == 6 ? 0.9996 : 0.9999, mui}; }
 function napCaiDat() {
@@ -1075,6 +1135,7 @@ function napCaiDat() {
   const ds = TINH.slice().sort((a, b) => a[1].replace(/^(Tỉnh|Thành phố) /, '').localeCompare(b[1].replace(/^(Tỉnh|Thành phố) /, ''), 'vi'));
   s.innerHTML = '<option value="">— Nhập tay kinh tuyến trục —</option>' + ds.map(t => `<option value="${t[0]}">${esc(t[1])}${t[4] !== t[0] ? ' (nay: ' + esc(t[3]) + ')' : ''} – ${kttChu(t[2])}</option>`).join('');
   s.value = mCD.tinh || ''; $('#cdKTT').value = mCD.ktt; $('#cdMui').value = String(mCD.mui); $('#cdXY').value = mCD.xy;
+  $('#cdDongDau').checked = mCD.dongDau !== false; $('#cdCoAnh').value = String(mCD.coAnh || 1600); $('#cdTienTo').value = mCD.tienTo || 'P';
   hienKTT();
 }
 function chonTinh() { const t = TINH.find(x => x[0] === $('#cdTinh').value); if (t) { $('#cdKTT').value = t[2]; } docCaiDat(); }
@@ -1228,7 +1289,11 @@ function saoChepThua() {
   saoChep(s);
 }
 /* luu du lieu da mo trong IndexedDB de lan sau mo lai (khong co cung khong sao) */
-function idb() { return new Promise((ok, loi) => { try { const r = indexedDB.open('ktool_mobile', 1); r.onupgradeneeded = () => r.result.createObjectStore('ktb'); r.onsuccess = () => ok(r.result); r.onerror = () => loi(r.error); } catch (e) { loi(e); } }); }
+let mIDB = null;
+function idb() {
+  if (mIDB) return Promise.resolve(mIDB);
+  return new Promise((ok, loi) => { try { const r = indexedDB.open('ktool_mobile', 2); r.onupgradeneeded = () => { const db = r.result; if (!db.objectStoreNames.contains('ktb')) db.createObjectStore('ktb'); if (!db.objectStoreNames.contains('diem')) db.createObjectStore('diem', {keyPath: 'id'}); if (!db.objectStoreNames.contains('anh')) db.createObjectStore('anh'); }; r.onsuccess = () => { mIDB = r.result; ok(mIDB); }; r.onerror = () => loi(r.error); } catch (e) { loi(e); } });
+}
 async function luuDuLieu() {
   try {
     const db = await idb(), tx = db.transaction('ktb', 'readwrite'), st = tx.objectStore('ktb');
@@ -1278,8 +1343,9 @@ function khoiTaoBanDo() {
   datNen(mCD.nen || 'osm');
   mLopThua = L.layerGroup().addTo(mMap); mLopNhan = L.layerGroup().addTo(mMap); mLopChon = L.layerGroup().addTo(mMap);
   mMap.on('moveend zoomend', veNhan);
-  mMap.on('click', e => { if (mDo.bat) { themDiemDo(e.latlng); return; } chamBanDo(e.latlng); });
+  mMap.on('click', e => { if (mGhim.bat) { ghimTai(e.latlng); return; } if (mDo.bat) { themDiemDo(e.latlng); return; } chamBanDo(e.latlng); });
   veLopThua(true);
+  veDiemBD();
 }
 function datNen(k) {
   if (!NEN[k]) k = 'osm';
@@ -1307,7 +1373,7 @@ function veLopThua(zoom) {
   for (const t of mThua) {
     if (t.ll.length < 3) continue;
     const pg = L.polygon(t.ll, {renderer: ren, color: '#8a2be2', weight: 1.2, fillColor: MAU_LD(t.f.LOAIDAT), fillOpacity: 0.45});
-    pg.on('click', e => { L.DomEvent.stopPropagation(e); if (mDo.bat) { themDiemDo(e.latlng); return; } moChiTiet(t); });
+    pg.on('click', e => { L.DomEvent.stopPropagation(e); if (mGhim.bat) { ghimTai(e.latlng); return; } if (mDo.bat) { themDiemDo(e.latlng); return; } moChiTiet(t); });
     mLopThua.addLayer(pg);
     const b = L.latLngBounds([t.bb[0], t.bb[1]], [t.bb[2], t.bb[3]]);
     mBoundsAll = mBoundsAll ? mBoundsAll.extend(b) : b;
@@ -1373,7 +1439,7 @@ function loiGPS(e) {
 }
 function capNhatGPS(p) {
   const lat = p.coords.latitude, lon = p.coords.longitude, acc = p.coords.accuracy;
-  mGPS.ll = [lat, lon];
+  mGPS.ll = [lat, lon]; mGPS.acc = acc; mGPS.t = Date.now();
   if (!mGPS.cham) {
     mGPS.vong = L.circle(mGPS.ll, {radius: acc, color: '#1e88e5', weight: 1, fillOpacity: 0.12, interactive: false}).addTo(mMap);
     mGPS.cham = L.circleMarker(mGPS.ll, {radius: 7, color: '#fff', weight: 2.5, fillColor: '#1e88e5', fillOpacity: 1, interactive: false}).addTo(mMap);
@@ -1404,6 +1470,7 @@ async function layGPSVao(noi) {
 const mDo = {bat: false, diem: [], lop: null};
 function batDo() {
   mDo.bat = !mDo.bat; $('#nutDo').classList.toggle('bat', mDo.bat);
+  if (mDo.bat && mGhim.bat) batGhim();
   if (!mDo.lop) mDo.lop = L.layerGroup().addTo(mMap);
   if (!mDo.bat) { mDo.diem = []; mDo.lop.clearLayers(); $('#hopDo').classList.add('an'); return; }
   $('#hopDo').classList.remove('an'); veDo();
@@ -1512,11 +1579,312 @@ function tinhManh() {
   kq.classList.remove('an');
 }
 
+/* ======================= DIEM DIEU TRA (ghim, anh hien trang, phieu dieu tra, xuat SHP) ======================= */
+let mDiem = [];                 // [{id, ten, cay, dat, ghichu, lat, lon, acc, tg, anh:[idAnh], soTo, soThua}]
+const mGhim = {bat: false};
+let mLopDiem = null, mDiemSua = null;
+const DM_CAY = ['Lúa', 'Lúa – màu', 'Ngô', 'Mía', 'Sắn (mì)', 'Rau màu', 'Cây hàng năm khác', 'Cà phê', 'Cao su', 'Hồ tiêu', 'Điều', 'Chè', 'Sầu riêng', 'Xoài', 'Bơ', 'Mít', 'Bưởi', 'Cam, quýt', 'Thanh long', 'Chuối', 'Dừa', 'Nhãn, vải', 'Cây ăn quả khác', 'Keo', 'Bạch đàn', 'Thông', 'Rừng tự nhiên', 'Tre, nứa', 'Cỏ, cây bụi', 'Đất trống'];
+const DM_DAT = ['LUC', 'LUK', 'LUN', 'HNK', 'CLN', 'RSX', 'RPH', 'RDD', 'NTS', 'NKH', 'ONT', 'ODT', 'BCS', 'DCS', 'NCS', 'Đất phù sa', 'Đất xám', 'Đất đỏ vàng', 'Đất đỏ bazan', 'Đất cát', 'Đất mặn, phèn', 'Đất dốc tụ', 'Đất xói mòn trơ sỏi đá'];
+function napDanhMuc() {
+  const op = (ds, ls) => [...new Set([...docLS(ls, []), ...ds])].map(v => `<option value="${esc(v)}">`).join('');
+  $('#dlCay').innerHTML = op(DM_CAY, 'dmCay'); $('#dlDat').innerHTML = op(DM_DAT, 'dmDat');
+}
+function nhoDanhMuc(ls, v) { v = (v || '').trim(); if (!v) return; const a = docLS(ls, []).filter(x => x !== v); a.unshift(v); luuLS(ls, a.slice(0, 40)); }
+/* --- luu tru IndexedDB --- */
+async function idbLay(st) { const db = await idb(); return new Promise((ok, loi) => { const r = db.transaction(st).objectStore(st).getAll(); r.onsuccess = () => ok(r.result || []); r.onerror = () => loi(r.error); }); }
+async function idbGhi(st, v, k) { const db = await idb(); return new Promise((ok, loi) => { const tx = db.transaction(st, 'readwrite'); k === undefined ? tx.objectStore(st).put(v) : tx.objectStore(st).put(v, k); tx.oncomplete = () => ok(); tx.onerror = () => loi(tx.error); }); }
+async function idbXoa(st, k) { const db = await idb(); return new Promise(ok => { const tx = db.transaction(st, 'readwrite'); tx.objectStore(st).delete(k); tx.oncomplete = () => ok(); tx.onerror = () => ok(); }); }
+async function idbMot(st, k) { const db = await idb(); return new Promise(ok => { const r = db.transaction(st).objectStore(st).get(k); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); }); }
+async function napDiem() { try { mDiem = await idbLay('diem'); mDiem.sort((a, b) => (a.tg || '').localeCompare(b.tg || '')); } catch (e) { mDiem = []; } veDiemBD(); veDSDiem(); }
+async function luuDiem(d) { try { await idbGhi('diem', d); } catch (e) { bao('Không lưu được điểm vào bộ nhớ máy: ' + (e && e.message || e), 5000); } }
+/* --- tao diem --- */
+function tenTiep() {
+  const tt = (mCD.tienTo || 'P'); let m = 0;
+  for (const d of mDiem) { const r = String(d.ten || '').match(/(\d+)\s*$/); if (r && String(d.ten).startsWith(tt)) m = Math.max(m, +r[1]); }
+  return tt + String(m + 1).padStart(2, '0');
+}
+function gioVN(d) { d = d || new Date(); const p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`; }
+async function taoDiem(lat, lon, acc) {
+  const t = mThua.length ? timThuaTai(lat, lon) : null;
+  const d = {id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ten: tenTiep(), cay: '', dat: '', ghichu: '', lat, lon, acc: acc == null ? null : Math.round(acc * 10) / 10, tg: gioVN(), anh: [],
+    soTo: t ? (t.f.SOTO || '') : '', soThua: t ? (t.f.SOTHUA || '') : ''};
+  mDiem.push(d); await luuDiem(d); veDiemBD(); veDSDiem();
+  return d;
+}
+async function ghimGPS() {
+  let lat, lon, acc;
+  if (mGPS.ll && mGPS.t && Date.now() - mGPS.t < 15000) { [lat, lon] = mGPS.ll; acc = mGPS.acc; }
+  else {
+    bao('Đang lấy vị trí GPS…', 15000);
+    try { const p = await layGPSMotLan(); lat = p.coords.latitude; lon = p.coords.longitude; acc = p.coords.accuracy; }
+    catch (e) { bao(e && e.code === 1 ? 'Chưa cho phép truy cập vị trí – vào Cài đặt iPhone cho phép định vị' : 'Không lấy được GPS. Có thể ghim bằng cách chạm trên bản đồ.', 5000); return; }
+  }
+  const d = await taoDiem(lat, lon, acc);
+  bao('Đã ghim ' + d.ten + (acc ? ' (±' + Math.round(acc) + ' m)' : ''));
+  moDiem(d);
+}
+function batGhim() {
+  mGhim.bat = !mGhim.bat; $('#nutGhim').classList.toggle('bat', mGhim.bat);
+  if (mGhim.bat && mDo.bat) batDo();
+  $('#hopGhim').classList.toggle('an', !mGhim.bat);
+  if (mGhim.bat) $('#hopGhim').innerHTML = `<div><b>Ghim điểm</b> – chạm lên bản đồ tại vị trí cần ghim</div>
+    <div class="hang" style="margin-top:6px"><button class="nut nho" onclick="ghimGPS()">Ghim vị trí GPS</button><button class="nut phu nho" onclick="batGhim()">Xong</button></div>`;
+}
+async function ghimTai(ll) { const d = await taoDiem(ll.lat, ll.lng, null); bao('Đã ghim ' + d.ten); moDiem(d); }
+/* --- ban do --- */
+const PIN = '<svg viewBox="0 0 26 34"><path d="M13 33s11-11 11-19.5A11 11 0 0 0 2 13.5C2 22 13 33 13 33z" fill="#e53935" stroke="#fff" stroke-width="2"/><circle cx="13" cy="13.5" r="4" fill="#fff"/></svg>';
+function veDiemBD() {
+  if (!mMap) return;
+  if (!mLopDiem) mLopDiem = L.layerGroup().addTo(mMap);
+  mLopDiem.clearLayers();
+  for (const d of mDiem) {
+    const m = L.marker([d.lat, d.lon], {icon: L.divIcon({className: 'ghim', iconSize: [26, 34], iconAnchor: [13, 33], html: `<div>${PIN}<span>${esc(d.ten)}</span></div>`})});
+    m.on('click', e => { L.DomEvent.stopPropagation(e); moDiem(d); });
+    mLopDiem.addLayer(m);
+  }
+}
+/* --- danh sach --- */
+const mURL = new Map();
+async function urlAnh(id) {
+  if (mURL.has(id)) return mURL.get(id);
+  const b = await idbMot('anh', id); if (!b) return '';
+  const u = URL.createObjectURL(b); mURL.set(id, u); return u;
+}
+async function veDSDiem() {
+  const q = ($('#timDiem') && $('#timDiem').value || '').trim().toLowerCase();
+  const kd = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').toLowerCase();
+  const ds = mDiem.filter(d => !q || kd([d.ten, d.cay, d.dat, d.ghichu, d.soThua].join(' ')).includes(kd(q))).slice().reverse();
+  $('#tkDiem').textContent = mDiem.length ? `${ds.length} / ${mDiem.length} điểm · ${mDiem.reduce((s, d) => s + d.anh.length, 0)} ảnh` : '';
+  $('#nutXoaHetDiem').classList.toggle('an', !mDiem.length);
+  if (!mDiem.length) { $('#dsDiem').innerHTML = '<div class="trong"><svg viewBox="0 0 24 24"><path d="M12 22s7-7.2 7-12.5A7 7 0 0 0 5 9.5C5 14.8 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.6"/></svg><div>Chưa có điểm điều tra</div></div>'; return; }
+  $('#dsDiem').innerHTML = ds.map(d => `<div class="diem" data-id="${d.id}"><div class="anh0" id="a0_${d.id}">${d.anh.length ? '' : 'Chưa có ảnh'}</div><div class="nd"><b>${esc(d.ten)}</b>
+    <div>${esc(d.cay || '–')} · ${esc(d.dat || '–')}</div><div>${esc(d.ghichu || '')}</div><div>${esc(d.tg)}${d.soThua ? ' · tờ ' + esc(d.soTo) + ' thửa ' + esc(d.soThua) : ''} · ${d.anh.length} ảnh</div></div></div>`).join('');
+  for (const d of ds) if (d.anh.length) { const u = await urlAnh(d.anh[0]); const o = $('#a0_' + d.id); if (u && o) o.innerHTML = `<img src="${u}" class="anh0" alt="">`; }
+}
+$('#dsDiem').addEventListener('click', e => { const o = e.target.closest('.diem'); if (!o) return; const d = mDiem.find(x => x.id === o.dataset.id); if (d) moDiem(d); });
+/* --- phieu dieu tra --- */
+async function moDiem(d) {
+  mDiemSua = d;
+  const [x, y] = wgs2vn(d.lat, d.lon);
+  $('#shTieuDe').textContent = 'Điểm ' + d.ten;
+  $('#shThan').innerHTML = `
+    <label class="nho">Tên điểm phẫu diện / điểm điều tra</label><input id="dTen" value="${esc(d.ten)}">
+    <label class="nho">Loại cây hiện trạng</label><input id="dCay" list="dlCay" value="${esc(d.cay)}" placeholder="Chọn hoặc gõ">
+    <label class="nho">Loại đất hiện trạng</label><input id="dDat" list="dlDat" value="${esc(d.dat)}" placeholder="Chọn hoặc gõ">
+    <label class="nho">Ghi chú</label><textarea id="dGC" style="min-height:70px">${esc(d.ghichu)}</textarea>
+    <label class="nho">Ảnh chụp hiện trạng (${d.anh.length})</label>
+    <div class="hang"><button class="nut nho" onclick="$('#fileAnhCam').click()">Chụp ảnh</button><button class="nut phu nho" onclick="$('#fileAnhTV').click()">Chọn ảnh có sẵn</button></div>
+    <div class="luoianh" id="luoiAnh"></div>
+    <div class="hang" style="margin-top:12px"><button class="nut" onclick="luuPhieu()">Lưu</button><button class="nut phu" onclick="xemDiemBD()">Xem trên bản đồ</button></div>
+    <table class="tt" style="margin-top:10px">
+      <tr><td>Tọa độ WGS84</td><td>${d.lat.toFixed(7)}, ${d.lon.toFixed(7)}${d.acc ? ' (±' + Math.round(d.acc) + ' m)' : ' (ghim trên bản đồ)'}</td></tr>
+      <tr><td>VN-2000 (KTT ${kttChu(KTT().lon0)})</td><td>X ${so(x, 3)} · Y ${so(y, 3)}</td></tr>
+      <tr><td>Thời gian</td><td>${esc(d.tg)}</td></tr>
+      ${d.soThua ? `<tr><td>Thửa đất</td><td>Tờ ${esc(d.soTo)} – thửa ${esc(d.soThua)}</td></tr>` : ''}
+    </table>
+    <div class="hang" style="margin-top:10px">
+      <button class="nut phu nho" onclick="capNhatViTri()">Cập nhật vị trí theo GPS</button>
+      <a class="nut phu nho" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${d.lat.toFixed(7)},${d.lon.toFixed(7)}">Chỉ đường</a>
+      <button class="nut phu nho" style="color:var(--do)" onclick="xoaDiem()">Xóa điểm</button>
+    </div>`;
+  $('#sheet').classList.add('mo');
+  veLuoiAnh();
+}
+async function veLuoiAnh() {
+  const d = mDiemSua; if (!d) return;
+  const o = $('#luoiAnh'); if (!o) return;
+  let h = '';
+  for (const id of d.anh) { const u = await urlAnh(id); h += `<div class="o"><img src="${u}" alt="" onclick="xemAnhTo('${id}')"><button onclick="xoaAnh('${id}')">×</button></div>`; }
+  o.innerHTML = h;
+}
+async function xemAnhTo(id) { const u = await urlAnh(id); $('#xemAnh img').src = u; $('#xemAnh').classList.remove('an'); }
+function docPhieu() {
+  const d = mDiemSua; if (!d || !$('#dTen')) return;
+  d.ten = $('#dTen').value.trim() || d.ten; d.cay = $('#dCay').value.trim(); d.dat = $('#dDat').value.trim(); d.ghichu = $('#dGC').value.trim();
+}
+async function luuPhieu() {
+  const d = mDiemSua; if (!d) return;
+  docPhieu(); nhoDanhMuc('dmCay', d.cay); nhoDanhMuc('dmDat', d.dat); napDanhMuc();
+  await luuDiem(d); veDiemBD(); veDSDiem(); dongSheet(); bao('Đã lưu điểm ' + d.ten);
+}
+async function xoaDiem() {
+  const d = mDiemSua; if (!d || !confirm('Xóa điểm ' + d.ten + ' và ' + d.anh.length + ' ảnh?')) return;
+  for (const id of d.anh) await idbXoa('anh', id);
+  await idbXoa('diem', d.id); mDiem = mDiem.filter(x => x !== d); mDiemSua = null;
+  dongSheet(); veDiemBD(); veDSDiem(); bao('Đã xóa điểm');
+}
+async function xoaHetDiem() {
+  if (!mDiem.length || !confirm('Xóa TẤT CẢ ' + mDiem.length + ' điểm điều tra và ảnh trên máy? (Nên xuất .zip trước)')) return;
+  for (const d of mDiem) { for (const id of d.anh) await idbXoa('anh', id); await idbXoa('diem', d.id); }
+  mDiem = []; veDiemBD(); veDSDiem();
+}
+async function xoaAnh(id) {
+  const d = mDiemSua; if (!d || !confirm('Xóa ảnh này?')) return;
+  d.anh = d.anh.filter(x => x !== id); await idbXoa('anh', id); docPhieu(); await luuDiem(d); veLuoiAnh(); veDSDiem();
+}
+async function capNhatViTri() {
+  const d = mDiemSua; if (!d) return;
+  bao('Đang lấy vị trí GPS…', 15000);
+  try {
+    const p = await layGPSMotLan(); d.lat = p.coords.latitude; d.lon = p.coords.longitude; d.acc = Math.round(p.coords.accuracy * 10) / 10;
+    const t = mThua.length ? timThuaTai(d.lat, d.lon) : null; d.soTo = t ? (t.f.SOTO || '') : ''; d.soThua = t ? (t.f.SOTHUA || '') : '';
+    docPhieu(); await luuDiem(d); veDiemBD(); moDiem(d); bao('Đã cập nhật vị trí (±' + Math.round(d.acc) + ' m)');
+  } catch (e) { bao('Không lấy được GPS', 4000); }
+}
+function xemDiemBD() {
+  const d = mDiemSua; if (!d) return; docPhieu(); moTab('bando'); dongSheet();
+  setTimeout(() => { mMap.invalidateSize(); mMap.setView([d.lat, d.lon], Math.max(mMap.getZoom(), 19)); }, 60);
+}
+/* --- anh: thu nho, ghi thong tin len anh --- */
+function napAnh(f) {
+  return new Promise((ok, loi) => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => { ok(im); setTimeout(() => URL.revokeObjectURL(u), 1000); }; im.onerror = () => loi(new Error('Không đọc được ảnh')); im.src = u; });
+}
+async function xuLyAnh(f, d) {
+  const im = await napAnh(f), max = mCD.coAnh || 1600;
+  let w = im.naturalWidth, h = im.naturalHeight; const k = Math.min(1, max / Math.max(w, h)); w = Math.round(w * k); h = Math.round(h * k);
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  const g = cv.getContext('2d'); g.drawImage(im, 0, 0, w, h);
+  if (mCD.dongDau !== false) {
+    const [x, y] = wgs2vn(d.lat, d.lon), fs = Math.max(14, Math.round(w / 45));
+    const dong = [`${d.ten}${d.cay ? ' · ' + d.cay : ''}${d.dat ? ' · ' + d.dat : ''}`, `${gioVN()}  ·  ${d.lat.toFixed(6)}, ${d.lon.toFixed(6)}`, `VN-2000 (KTT ${kttChu(KTT().lon0)}): X ${so(x, 2)}  Y ${so(y, 2)}`];
+    g.fillStyle = 'rgba(0,0,0,.5)'; g.fillRect(0, h - fs * 1.35 * dong.length - fs * 0.6, w, fs * 1.35 * dong.length + fs * 0.6);
+    g.fillStyle = '#fff'; g.font = `600 ${fs}px -apple-system, Arial, sans-serif`; g.textBaseline = 'bottom';
+    dong.forEach((t, i) => g.fillText(t, fs * 0.6, h - fs * 0.35 - fs * 1.35 * (dong.length - 1 - i)));
+  }
+  return new Promise(ok => cv.toBlob(b => ok(b), 'image/jpeg', 0.85));
+}
+async function themAnh(fs) {
+  const d = mDiemSua; if (!d || !fs.length) return;
+  docPhieu();
+  bao('Đang lưu ảnh…', 8000);
+  let n = 0;
+  for (const f of fs) {
+    try { const b = await xuLyAnh(f, d), id = d.id + '_' + Date.now().toString(36) + n; await idbGhi('anh', b, id); d.anh.push(id); n++; }
+    catch (e) { bao('Không lưu được ảnh: ' + (e && e.message || e), 5000); }
+  }
+  await luuDiem(d); veLuoiAnh(); veDSDiem(); if (n) bao('Đã lưu ' + n + ' ảnh');
+  const nh = $('#shThan label.nho:nth-of-type(5)'); if (nh) nh.textContent = 'Ảnh chụp hiện trạng (' + d.anh.length + ')';
+}
+['#fileAnhCam', '#fileAnhTV'].forEach(s => $(s).addEventListener('change', e => { const fs = Array.from(e.target.files || []); e.target.value = ''; themAnh(fs); }));
+
+/* ======================= XUAT: SHAPEFILE (DIEM) + DBF + CSV + KML + ZIP ======================= */
+const TE = new TextEncoder();
+function catByte(s, n) { s = String(s || ''); let b = TE.encode(s); if (b.length <= n) return b; while (b.length > n) { s = s.slice(0, -1); b = TE.encode(s); } return b; }
+const TRUONG_DBF = [['TEN_DIEM', 'C', 100], ['LOAI_CAY', 'C', 100], ['LOAI_DAT', 'C', 100], ['GHI_CHU', 'C', 254], ['ANH', 'C', 254], ['VI_DO', 'N', 14, 8], ['KINH_DO', 'N', 14, 8], ['X_BAC', 'N', 14, 3], ['Y_DONG', 'N', 14, 3], ['DO_CX', 'N', 8, 1], ['THOI_GIAN', 'C', 19], ['SO_TO', 'C', 10], ['SO_THUA', 'C', 20]];
+function tenAnh(d, i) { return 'anh/' + (String(d.ten || d.id).replace(/[\\/:*?"<>|\s]+/g, '_') || d.id) + '_' + (i + 1) + '.jpg'; }
+function hangDiem(d) {
+  const [x, y] = wgs2vn(d.lat, d.lon);
+  return {TEN_DIEM: d.ten, LOAI_CAY: d.cay, LOAI_DAT: d.dat, GHI_CHU: d.ghichu, ANH: d.anh.map((a, i) => tenAnh(d, i)).join(';'), VI_DO: d.lat, KINH_DO: d.lon, X_BAC: x, Y_DONG: y, DO_CX: d.acc == null ? '' : d.acc, THOI_GIAN: d.tg, SO_TO: d.soTo || '', SO_THUA: d.soThua || ''};
+}
+function taoDBF(hang) {
+  const nf = TRUONG_DBF.length, hl = 32 + 32 * nf + 1, rl = 1 + TRUONG_DBF.reduce((s, f) => s + f[2], 0);
+  const buf = new Uint8Array(hl + rl * hang.length + 1), dv = new DataView(buf.buffer), nay = new Date();
+  buf[0] = 3; buf[1] = nay.getFullYear() - 1900; buf[2] = nay.getMonth() + 1; buf[3] = nay.getDate();
+  dv.setUint32(4, hang.length, true); dv.setUint16(8, hl, true); dv.setUint16(10, rl, true); buf[29] = 0;
+  TRUONG_DBF.forEach((f, i) => { const o = 32 + 32 * i; for (let k = 0; k < f[0].length; k++) buf[o + k] = f[0].charCodeAt(k); buf[o + 11] = f[1].charCodeAt(0); buf[o + 16] = f[2]; buf[o + 17] = f[3] || 0; });
+  buf[hl - 1] = 0x0D;
+  let p = hl;
+  for (const h of hang) {
+    buf[p++] = 0x20;
+    for (const f of TRUONG_DBF) {
+      const v = h[f[0]]; let b;
+      if (f[1] === 'N') { const t = (v === '' || v == null || isNaN(+v)) ? '' : (+v).toFixed(f[3] || 0); b = TE.encode(t.padStart(f[2], ' ').slice(-f[2])); buf.set(b, p); }
+      else { buf.fill(0x20, p, p + f[2]); b = catByte(String(v == null ? '' : v).replace(/\r?\n/g, ' / '), f[2]); buf.set(b, p); }
+      p += f[2];
+    }
+  }
+  buf[p] = 0x1A;
+  return buf;
+}
+function taoSHP(pts) {
+  const n = pts.length, lenShp = 100 + n * 28, lenShx = 100 + n * 8;
+  const shp = new DataView(new ArrayBuffer(lenShp)), shx = new DataView(new ArrayBuffer(lenShx));
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  pts.forEach(p => { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); });
+  if (!n) { x0 = y0 = x1 = y1 = 0; }
+  for (const [dv, len] of [[shp, lenShp], [shx, lenShx]]) {
+    dv.setInt32(0, 9994, false); dv.setInt32(24, len / 2, false); dv.setInt32(28, 1000, true); dv.setInt32(32, 1, true);
+    dv.setFloat64(36, x0, true); dv.setFloat64(44, y0, true); dv.setFloat64(52, x1, true); dv.setFloat64(60, y1, true);
+  }
+  pts.forEach((p, i) => {
+    const o = 100 + i * 28;
+    shp.setInt32(o, i + 1, false); shp.setInt32(o + 4, 10, false); shp.setInt32(o + 8, 1, true); shp.setFloat64(o + 12, p[0], true); shp.setFloat64(o + 20, p[1], true);
+    shx.setInt32(100 + i * 8, o / 2, false); shx.setInt32(104 + i * 8, 10, false);
+  });
+  return [new Uint8Array(shp.buffer), new Uint8Array(shx.buffer)];
+}
+function chuoiPrj(ht) {
+  if (ht === 'wgs') return 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]';
+  const k = KTT(), ten = 'VN_2000_' + (k.mui == 6 ? 'UTM' : 'TM3') + '_' + k.lon0.toFixed(2).replace('.', '_');
+  return `PROJCS["${ten}",GEOGCS["GCS_VN_2000",DATUM["D_Vietnam_2000",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",${k.lon0.toFixed(6)}],PARAMETER["Scale_Factor",${k.k0.toFixed(4)}],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]`;
+}
+const csvO = v => { v = String(v == null ? '' : v).replace(/\r?\n/g, ' / '); return /[",;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+function taoCSV() {
+  const cot = ['STT', ...TRUONG_DBF.map(f => f[0]), 'KTT'], k = KTT();
+  let s = '﻿' + cot.join(',') + '\r\n';
+  mDiem.forEach((d, i) => { const h = hangDiem(d); s += [i + 1, ...TRUONG_DBF.map(f => f[1] === 'N' && h[f[0]] !== '' ? (+h[f[0]]).toFixed(f[3]) : h[f[0]]), k.lon0.toFixed(4) + '/' + k.mui].map(csvO).join(',') + '\r\n'; });
+  return s;
+}
+function taoKML() {
+  const x = s => esc(s);
+  let s = '<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Điểm điều tra – KTool Mobile</name>\n';
+  for (const d of mDiem) {
+    const h = hangDiem(d);
+    s += `<Placemark><name>${x(d.ten)}</name><description>${x(['Loại cây: ' + d.cay, 'Loại đất: ' + d.dat, 'Ghi chú: ' + d.ghichu, 'Thời gian: ' + d.tg, 'Ảnh: ' + h.ANH].join('\n'))}</description><ExtendedData>` +
+      TRUONG_DBF.map(f => `<Data name="${f[0]}"><value>${x(h[f[0]])}</value></Data>`).join('') + `</ExtendedData><Point><coordinates>${d.lon.toFixed(8)},${d.lat.toFixed(8)},0</coordinates></Point></Placemark>\n`;
+  }
+  return s + '</Document></kml>\n';
+}
+/* zip (luu thang, khong nen) */
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(b) { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function taoZip(tep) {
+  const phan = [], tt = []; let off = 0; const nay = new Date();
+  const tg = ((nay.getHours() << 11) | (nay.getMinutes() << 5) | (nay.getSeconds() >> 1)) & 0xFFFF, ng = (((nay.getFullYear() - 1980) << 9) | ((nay.getMonth() + 1) << 5) | nay.getDate()) & 0xFFFF;
+  for (const [ten, dl] of tep) {
+    const tb = TE.encode(ten), crc = crc32(dl), h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034B50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true); h.setUint16(10, tg, true); h.setUint16(12, ng, true);
+    h.setUint32(14, crc, true); h.setUint32(18, dl.length, true); h.setUint32(22, dl.length, true); h.setUint16(26, tb.length, true); h.setUint16(28, 0, true);
+    phan.push(new Uint8Array(h.buffer), tb, dl);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014B50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true); c.setUint16(12, tg, true); c.setUint16(14, ng, true);
+    c.setUint32(16, crc, true); c.setUint32(20, dl.length, true); c.setUint32(24, dl.length, true); c.setUint16(28, tb.length, true); c.setUint32(42, off, true);
+    tt.push(new Uint8Array(c.buffer), tb);
+    off += 30 + tb.length + dl.length;
+  }
+  const lenTT = tt.reduce((s, a) => s + a.length, 0), e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054B50, true); e.setUint16(8, tep.length, true); e.setUint16(10, tep.length, true); e.setUint32(12, lenTT, true); e.setUint32(16, off, true);
+  return new Blob([...phan, ...tt, new Uint8Array(e.buffer)], {type: 'application/zip'});
+}
+async function guiFile(blob, ten) {
+  const f = new File([blob], ten, {type: blob.type || 'application/octet-stream'});
+  try { if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: ten}); bao('Đã xuất ' + ten); return; } } catch (e) { if (e && e.name === 'AbortError') { bao('Đã hủy gửi file'); return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  bao('Đã tạo ' + ten + ' (trong mục Tải về / Tệp)', 4000);
+}
+function hauTo() { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`; }
+async function xuatGoi() {
+  if (!mDiem.length) { bao('Chưa có điểm điều tra'); return; }
+  bao('Đang đóng gói…', 15000);
+  const ht = $('#xuatHT').value, hang = mDiem.map(hangDiem);
+  const pts = mDiem.map((d, i) => ht === 'wgs' ? [d.lon, d.lat] : [hang[i].Y_DONG, hang[i].X_BAC]);
+  const [shp, shx] = taoSHP(pts);
+  const tep = [['DiemDieuTra.shp', shp], ['DiemDieuTra.shx', shx], ['DiemDieuTra.dbf', taoDBF(hang)], ['DiemDieuTra.prj', TE.encode(chuoiPrj(ht))], ['DiemDieuTra.cpg', TE.encode('UTF-8')],
+    ['DiemDieuTra.csv', TE.encode(taoCSV())], ['DiemDieuTra.kml', TE.encode(taoKML())],
+    ['DOC_TRUOC.txt', TE.encode('Diem dieu tra xuat tu KTool Mobile ' + gioVN() + '\r\nHe toa do Shapefile: ' + (ht === 'wgs' ? 'WGS84 (do)' : 'VN-2000, KTT ' + KTT().lon0 + ', mui ' + KTT().mui + ' do') + '\r\nMicroStation: KTool > Tien ich > Nhap diem dieu tra tu KTool Mobile, chon file .zip nay.\r\nQGIS / ArcGIS: mo DiemDieuTra.shp. Google Earth: mo DiemDieuTra.kml. Anh hien trang: thu muc anh.\r\n')]];
+  let nAnh = 0;
+  for (const d of mDiem) for (let i = 0; i < d.anh.length; i++) { const b = await idbMot('anh', d.anh[i]); if (b) { tep.push([tenAnh(d, i), new Uint8Array(await b.arrayBuffer())]); nAnh++; } }
+  await guiFile(taoZip(tep), 'DiemDieuTra_' + hauTo() + '.zip');
+}
+async function xuatCSV() { if (!mDiem.length) { bao('Chưa có điểm điều tra'); return; } await guiFile(new Blob([taoCSV()], {type: 'text/csv'}), 'DiemDieuTra_' + hauTo() + '.csv'); }
+
 /* ======================= DIEU HUONG ======================= */
 function moTab(t) {
   $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-' + t));
   $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
   if (t === 'bando') { khoiTaoBanDo(); setTimeout(() => mMap.invalidateSize(), 30); }
+  if (t === 'diem') veDSDiem();
   if (t !== 'thua') dongSheet();
   try { history.replaceState(null, '', '#' + t); } catch (e) {}
 }
@@ -1525,8 +1893,10 @@ function moTab(t) {
 napCaiDat();
 datSeg('segCD', 'vn');
 napDuLieuCu();
+napDanhMuc();
+napDiem();
 (function () {
-  const ht = (location.hash || '').slice(1); if (['thua', 'bando', 'toado', 'caidat'].includes(ht)) moTab(ht);
+  const ht = (location.hash || '').slice(1); if (['thua', 'bando', 'diem', 'toado', 'caidat'].includes(ht)) moTab(ht);
   let cheDo = '';
   try { if (window.top !== window.self) cheDo = 'Đang xem bản xem trước trong Claude: định vị GPS, bản đồ nền và cài lên màn hình chính chỉ chạy khi mở KTool Mobile từ địa chỉ web riêng (gói cài kèm theo).'; } catch (e) { cheDo = 'x'; }
   if (cheDo === 'x') cheDo = 'Đang xem bản xem trước trong Claude: định vị GPS, bản đồ nền và cài lên màn hình chính chỉ chạy khi mở KTool Mobile từ địa chỉ web riêng (gói cài kèm theo).';

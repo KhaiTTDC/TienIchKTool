@@ -1,5 +1,5 @@
 /* KTool Mobile - service worker: chay offline + luu tam ban do nen da xem */
-const BAN = 'ktm-v1';
+const BAN = 'ktm-v2';
 const NEN = 'ktm-nen-v1';
 const TEP = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(BAN).then(c => c.addAll(TEP)).then(() => self.skipWaiting())); });

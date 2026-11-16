@@ -1,7 +1,7 @@
 {
   "name": "KTool Mobile",
   "short_name": "KTool",
-  "description": "Tra cứu CSDL thửa đất .ktb, bản đồ thửa + GPS, chuyển đổi tọa độ VN-2000",
+  "description": "Tra cứu CSDL thửa đất .ktb, bản đồ thửa + GPS, ghim điểm điều tra, chụp ảnh hiện trạng, xuất Shapefile, chuyển đổi tọa độ VN-2000",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

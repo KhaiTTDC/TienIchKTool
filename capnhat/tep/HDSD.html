@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>KTool - Hướng dẫn sử dụng</title><style>body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.55;color:#222}h1{color:#0b4f8a}h2{color:#0b4f8a;border-bottom:1px solid #ccd;padding-bottom:4px;margin-top:32px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:4px 8px}th{background:#eef3f8}code{background:#f3f3f3;padding:1px 4px;border-radius:3px}pre{background:#f6f8fa;padding:10px;overflow:auto}</style></head><body><h1>KTool 1.0 – Hướng dẫn sử dụng</h1>
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>KTool - Hướng dẫn sử dụng</title><style>body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.55;color:#222}h1{color:#0b4f8a}h2{color:#0b4f8a;border-bottom:1px solid #ccd;padding-bottom:4px;margin-top:32px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:4px 8px}th{background:#eef3f8}code{background:#f3f3f3;padding:1px 4px;border-radius:3px}pre{background:#f6f8fa;padding:10px;overflow:auto}</style></head><body><h1>KTool 1.4 – Hướng dẫn sử dụng</h1>
 <p>Công cụ VBA hỗ trợ biên tập bản đồ địa chính trên <strong>MicroStation V8i</strong> (SELECTseries 1–10, 32-bit) và <strong>MicroStation CONNECT Edition</strong> (64-bit): chuẩn hóa dữ liệu, kiểm tra và sửa lỗi topo, tạo vùng thửa, gán và quản lý thuộc tính, vẽ nhãn thửa, vẽ nhãn quy chủ, kiểm tra thuộc tính; tạo khung bản đồ theo TT 26/2024, nhập số liệu đo và nối điểm, lập sơ đồ hình thể và hồ sơ thửa đất (phiếu kết quả đo đạc, trích lục, bản mô tả ranh giới, trang in GCN), xuất Shapefile, chuyển đổi font TCVN3/VNI ↔ Unicode.</p>
 <hr />
 <h2>1. Thành phần (thư mục <code>src</code> trong thư mục cài)</h2>
@@ -131,7 +131,7 @@
 <p>Mã nguồn để ở dạng ASCII (tiếng Việt được mã hóa <code>\uXXXX</code> và giải mã khi chạy), nên import vào VBA trên Windows ở bất kỳ ngôn ngữ hệ thống nào cũng không bị lỗi font.</p>
 <hr />
 <h2>2. Cài đặt</h2>
-<h3>2.1 Cài bằng file <code>KTool_Setup_v1.0_PhatHanh.exe</code> (khuyên dùng)</h3>
+<h3>2.1 Cài bằng file <code>KTool_Setup_v1.4_PhatHanh.exe</code> (khuyên dùng)</h3>
 <ol>
 <li><strong>Đóng MicroStation</strong>, giải nén gói cài, chạy <code>KTool_Setup_v…_PhatHanh.exe</code> (để <code>KTool.mvba</code> cùng thư mục) (cần quyền Administrator).</li>
 <li>Chọn thư mục cài (mặc định <code>C:\KTool</code>). <strong>Nên dùng đường dẫn không dấu, không khoảng trắng.</strong></li>
@@ -589,6 +589,9 @@
 - Cấu hình <code>[ThuocTinh] LuuTru</code>: <code>TUDONG</code> (mặc định: có <code>.ktb</code> thì dùng <code>.ktb</code>; bản vẽ cũ chưa có <code>.ktb</code> mà có shape vùng thì đọc shape + tag), <code>KTB</code>, <code>VUNG</code>.
 - Lưu ý: giữ file <code>.ktb</code> đi cùng file <code>.dgn</code> khi chép, gửi dữ liệu. Không sửa cột <code>ID</code>, <code>TOADO</code> bằng tay.
 - <strong>Tâm thửa</strong>: đối tượng có sẵn trên level tâm (điểm, chữ hoặc cell) nằm trong thửa được dùng làm <strong>điểm đặt nhãn</strong>; thửa chưa có tâm sẽ được tạo điểm tâm (lực nét <code>TamThua_Net</code>). Tùy chọn <em>Xóa toàn bộ tâm cũ và tạo lại</em>.</p>
+<blockquote>
+<p>Lỗi <em>#91 – Object variable or With block variable not set</em> khi tạo vùng (bản 1.0): xảy ra khi file bản vẽ không tạo được level đánh dấu lỗi <code>LOI_TOPO</code> (file DGN V7, bảng level bị khóa / lấy từ thư viện DGNLIB) mà bản đồ có điểm treo, vùng nhỏ cần đánh dấu. Từ bản 1.1 KTool dùng level đang hoạt động thay thế và báo 1 lần; nên lưu file sang DGN V8 (<em>File &gt; Save As</em>). Nếu còn lỗi khác, thông báo lỗi ghi kèm <strong>bước</strong> đang chạy để dễ tìm nguyên nhân.</p>
+</blockquote>
 <h3>5.5 Thuộc tính thửa</h3>
 <p><strong>Màu nhãn khi gán thông tin:</strong> ô <em>Màu</em> trong bảng gán cho phép chọn màu có trên bản vẽ <strong>hoặc gõ tự do</strong> bất kỳ số màu 0–255, nhiều màu cách nhau dấu phẩy, dải màu dùng gạch nối (ví dụ <code>3</code>, <code>3,4,7</code>, <code>10-12</code>). Để trống = lấy nhãn mọi màu. Không có màu mặc định áp sẵn.</p>
 <p>Lưu trong <strong>CSDL thửa <code>.ktb</code></strong> (mục 5.4); bản vẽ dùng cách cũ thì lưu bằng <strong>Tag</strong> (tag set <code>THUADAT</code>) gắn ẩn trên mỗi vùng thửa. <code>DIENTICH</code>, <code>XNHAN</code>, <code>YNHAN</code> do công cụ tự tính.</p>
@@ -621,7 +624,13 @@
 </table>
 <p>Công cụ tách từng <strong>dòng chữ</strong> của nhãn (kể cả chữ trong text node và cell lồng nhau) và chỉ lấy dòng chữ có <strong>đúng level và màu</strong> đã chọn cho trường đó. Với <strong>cell</strong>, công cụ đọc toàn bộ chữ bên trong cell (kể cả cell lồng nhau), tên cell và tag gắn trên cell. Nhãn nằm trong thửa nào thì gán cho thửa đó. Nhãn mâu thuẫn được đánh dấu <code>TÊN_TRƯỜNG?</code>.</p>
 <p><strong>Gán lại</strong>: mặc định <em>ghi đè giá trị cũ bằng giá trị mới</em>, nên kết quả tự cập nhật mỗi lần gán. Tích <em>Xóa dữ liệu cũ của các trường được gán trước khi gán lại</em> để làm trống các trường đó ở <strong>mọi thửa</strong> rồi gán mới (thửa không còn nhãn sẽ để trống). Chỉ các trường có chọn level mới bị xóa; các trường khác giữ nguyên.</p>
-<p><strong>Đánh số thửa tự động</strong>: theo dải ngang từ trên xuống, trái sang phải (<code>KieuDanhSo=Z</code> hoặc <code>RAN</code>).</p>
+<p><strong>Đánh số thửa tự động</strong> (làm lại ở bản 1.4, mục <code>[DanhSo]</code>): chia thửa thành các dải theo vị trí tâm thửa rồi đánh số lần lượt từng dải.</p>
+<ul>
+<li><strong>Kiểu đánh</strong>: <em>Zích zắc</em> (dải sau đổi chiều so với dải trước: trái → phải, rồi phải → trái…) hoặc <em>Một chiều</em> (mọi dải cùng chiều).</li>
+<li><strong>Chia dải</strong>: <em>Dải ngang</em> (đánh theo hàng) hoặc <em>Dải dọc</em> (đánh theo cột). <strong>Bắt đầu từ góc</strong>: trên – trái (Tây Bắc, mặc định), trên – phải, dưới – trái, dưới – phải – dùng để <strong>đổi chiều đánh</strong>. <em>Bề rộng mỗi dải</em> = 0 thì tự tính theo cỡ thửa trung bình.</li>
+<li><strong>Phạm vi</strong>: <em>Đánh lại toàn bộ</em> (từ <em>Số bắt đầu</em>) hoặc <strong>Chỉ thửa chưa có số thửa</strong> (giữ nguyên số đã có). Tích <strong>Lấy số thửa bỏ</strong> thì thửa chưa có số nhận trước các số còn trống trong dãy – số bị bỏ, không có trong danh sách thửa – rồi mới nối tiếp sau số lớn nhất. Ô <em>Không dùng các số</em> (vd <code>5, 10-12</code>) để chừa số.</li>
+<li>Kết quả báo số thửa đã đánh, các <strong>số còn khuyết</strong> và <strong>số trùng</strong> (nếu có). Chạy được cho <strong>nhiều tờ</strong> (nhóm <em>Phạm vi thực hiện</em> &gt; <em>Nhiều tờ</em>). Đánh xong chạy <em>Vẽ nhãn thửa</em> để cập nhật số trên bản vẽ.</li>
+</ul>
 <p><strong>Bảng thông tin thuộc tính</strong>: hiện toàn bộ thửa dạng bảng (sắp theo số thửa):
 - ô <strong>Tìm</strong> (không phân biệt dấu) và bộ lọc nhanh: thiếu số thửa, thiếu loại đất, trùng số thửa, sai mã loại đất, thiếu tên chủ;
 - chọn một dòng → công cụ <strong>phóng tới và chọn thửa</strong> trên bản vẽ, các trường hiện ở khung dưới để sửa → <strong>Ghi thuộc tính</strong>;
@@ -673,12 +682,51 @@ Cũng có thể nạp <strong>một file Excel dữ liệu bất kỳ</strong>: 
 <td>Thu nhỏ tối đa (0.5 = còn một nửa cỡ chữ)</td>
 </tr>
 <tr>
-<td><em>ThuaNhoChiGhiSoThua</em></td>
-<td>Thu nhỏ hết mức vẫn không vừa: chỉ ghi số thửa</td>
+<td><em>ThuaNho</em></td>
+<td>Thửa quá nhỏ (thu nhỏ hết mức vẫn không vừa): <strong>SO</strong> = chỉ ghi số thửa; <strong>MUITEN</strong> = ghi nhãn đầy đủ (cỡ chữ chuẩn) đặt bên ngoài thửa, kèm <strong>mũi tên chỉ vào tâm thửa</strong>; <strong>THUNHO</strong> = ghi đủ thông tin, thu nhỏ tối đa</td>
+</tr>
+<tr>
+<td><em>DangCell</em></td>
+<td>1 = mỗi nhãn thửa vẽ thành <strong>1 cell</strong> (tên cell <code>NHANTHUA</code>), các thành phần giữ level, màu riêng; vẽ lại / <em>Xóa nhãn</em> tự xóa cell nhãn cũ</td>
 </tr>
 </tbody>
 </table>
+<p>Thửa nhỏ kiểu <em>MUITEN</em>: KTool tìm chỗ trống quanh thửa (ưu tiên nằm gọn trong thửa bên cạnh, không đè nhãn của thửa đó, không chồng nhãn ngoài khác; không có thì đặt ra phần đường / sông ngoài thửa), vẽ nhãn rồi vẽ mũi tên từ mép nhãn tới tâm thửa (đầu mũi tên hình chữ V, cùng level số thửa). Lệnh gán thông tin từ nhãn đọc lại đúng mũi tên này.</p>
 <p>Mỗi dòng nằm trên level riêng (TT26: số thửa và gạch 13, diện tích 4, loại đất 2). Cỡ chữ theo TT26 là Arial 2,0 mm.</p>
+<p><strong>Phạm vi thửa vẽ nhãn (từ bản 1.2)</strong> – ô <em>Vẽ nhãn cho</em> trong bảng chọn (<code>[NhanThua] PhamVi</code>). Thửa <strong>đa mục đích</strong> là thửa có từ 2 mã loại đất trở lên trong trường loại đất (<code>ONT+CLN</code>, <code>CLN+ODT</code>…):</p>
+<table>
+<thead>
+<tr>
+<th>PhamVi</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TATCA</strong></td>
+<td>Mọi thửa (như trước)</td>
+</tr>
+<tr>
+<td><strong>DONMUC</strong></td>
+<td>Thửa đơn mục đích vẽ đủ; thửa đa mục đích <strong>chỉ ghi số thửa và diện tích, để trống loại đất</strong></td>
+</tr>
+<tr>
+<td><strong>BODAMUC</strong></td>
+<td>Chỉ vẽ thửa đơn mục đích, <strong>không vẽ nhãn</strong> thửa đa mục đích</td>
+</tr>
+<tr>
+<td><strong>DAMUC</strong></td>
+<td>Chỉ vẽ thửa đa mục đích, nhãn dạng <strong><code>Mã loại đất 1: Diện tích 1</code>, <code>Mã loại đất 2: Diện tích 2</code>…</strong> mỗi loại 1 dòng (ví dụ <code>ONT:300.0</code> / <code>CLN:1250.5</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Hai lệnh riêng trong menu <em>Thửa đất &gt; Vẽ nhãn</em>: <strong>Vẽ nhãn thửa đơn mục đích</strong> (đặt sẵn DONMUC) và <strong>Vẽ nhãn thửa đa mục đích</strong> (đặt sẵn DAMUC); lệnh <em>Vẽ nhãn thửa</em> mở với phạm vi <em>Tất cả thửa</em>.</p>
+<ul>
+<li>Diện tích từng loại lấy ở các trường <strong>LD1/DTLD1, LD2/DTLD2…</strong> (tạo bằng lệnh tách diện tích loại đất, hoặc tự có khi gán từ nhãn <code>Mã: Diện tích</code> – mục 5.58). Loại không có diện tích thì bỏ qua; thửa không có diện tích loại nào được báo trong kết quả.</li>
+<li><em>TachDaMuc</em>: dấu ngăn mã và diện tích (mặc định <code>:</code>; có thể ghi <code>:</code> hoặc <code>-</code>). <em>ViTriDaMuc</em>: <strong>DUOI</strong> = khối chữ đặt ngay dưới vị trí nhãn số thửa; <strong>GIUA</strong> = giữa thửa.</li>
+<li>Chữ <code>Mã: Diện tích</code> nằm trên level / màu dòng loại đất, tự thu nhỏ vừa thửa; thửa quá nhỏ với <em>ThuaNho = MUITEN</em> thì đặt ngoài thửa kèm mũi tên; <em>DangCell = 1</em> thì mỗi khối là 1 cell.</li>
+<li>Xóa nhãn cũ theo phạm vi: DAMUC chỉ xóa nhãn <code>Mã: Diện tích</code> cũ (giữ nhãn số thửa); các phạm vi khác xóa nhãn thường nhưng <strong>giữ</strong> nhãn <code>Mã: Diện tích</code> – nên có thể vẽ <em>đơn mục đích</em> trước rồi <em>đa mục đích</em> sau để có đủ cả hai.</li>
+</ul>
 <h3>5.7 Vẽ nhãn quy chủ</h3>
 <p>Từ bản 1.16, nhãn quy chủ mặc định <strong>xếp chồng mỗi trường một dòng</strong>, căn giữa tại điểm nhãn thửa, ví dụ:</p>
 <pre><code>      4
@@ -771,6 +819,7 @@ Xóm 1 Phúc Lại
 <li><strong>Chỉ đổi font</strong>: đổi font mọi chữ trên level chọn sang <em>FontUnicode</em>.</li>
 </ul>
 <p>Chữ đã là Unicode thật sẽ tự bỏ qua, không bị chuyển hai lần. Có xử lý chữ trong text node và cell. Bảng mã lấy theo bảng chuẩn của bộ gõ Unikey. Font đích phải có trong Windows (MicroStation liệt kê được).</p>
+<p><strong>Từ bản 1.3</strong>: KTool <strong>đổi font trước rồi mới ghi chữ Unicode</strong> – trước đây ghi chữ Unicode khi chữ còn mang font TCVN3 (font 8 bit) nên MicroStation biến chữ có dấu thành <code>?</code>, chuyển đổi không thành công. Chữ vẫn bị mất dấu (font đích thiếu ký tự tiếng Việt) được đếm và báo riêng kèm vài mẫu. Tìm font nhanh theo loại (TrueType trước), cập nhật tiến độ và nhường máy liên tục nên tờ nhiều chữ không còn bị treo / <em>Not responding</em>. Ô <strong>Mọi level</strong> (mặc định bật) đổi chữ trên mọi level – nên để bật khi chạy <strong>nhiều tờ</strong> (phần <em>Phạm vi thực hiện</em> &gt; <em>Nhiều tờ</em>), vì danh sách level của tờ đầu có thể không khớp các tờ khác.</p>
 <h3>5.14 Ký hiệu cell theo TT 26/2024</h3>
 <p>Menu <em>Bản đồ &gt; Ký hiệu cell TT26</em>. Tên ký hiệu theo Phụ lục 21 mục III, hình và kích thước theo Phụ lục 22, tự vào đúng level:</p>
 <table>
@@ -854,7 +903,11 @@ Xóm 1 Phúc Lại
 <p>Cần chọn <strong>kinh tuyến trục VN-2000 của tỉnh</strong> (ô chọn tỉnh trong bảng chọn, hoặc <em>Hệ thống &gt; Đơn vị hành chính và kinh tuyến trục</em>; lưu ở mục <em>[HeToaDo]</em>, dùng chung cho KML, MapInfo, Shapefile, Google). Phép chuyển VN-2000 ↔ WGS84 dùng 7 tham số theo QĐ 05/2007 / TT 973/2001 (EPSG <em>VN-2000 to WGS 84 (2)</em>), đã đối chiếu với thư viện PROJ sai lệch dưới 0,1 mm.</p>
 <ul>
 <li><strong>Xuất KML/KMZ</strong>: thửa đất (vùng + toàn bộ thuộc tính trong ExtendedData), điểm đo, đường theo level. KMZ là KML nén, mở thẳng bằng Google Earth.</li>
-<li><strong>Nhập KML/KMZ</strong>: vùng, đường, điểm (kể cả MultiGeometry) vẽ lên các level KML_*, tên ghi vào giữa vùng; tùy chọn ghi thuộc tính trùng tên trường thửa thành tag.</li>
+<li><strong>Nhập KML/KMZ</strong> – giữ nguyên hình dạng, cấu trúc, màu sắc:</li>
+<li><em>Polygon</em> → <strong>Shape</strong> (vòng &gt; 5000 đỉnh → Complex Shape; có vòng trong → Grouped Hole), <em>LineString</em> → Line / LineString / Complex String, <em>LinearRing</em> → Shape, <em>Point</em> → điểm; kể cả MultiGeometry.</li>
+<li><strong>Màu, độ rộng nét</strong> lấy theo kiểu (<em>Style / StyleMap</em>) của KML: màu đổi sang số màu gần nhất trong bảng màu của file. KML có ghi sẵn <strong>số màu, level, lực nét, kiểu nét</strong> (trường <em>Color, Level, Weight, LineStyle</em> – KTool xuất đường có kèm các trường này) thì giữ <strong>đúng số màu</strong> (Shape màu 5 nhập lại vẫn là Shape màu 5).</li>
+<li><strong>Level theo thư mục</strong> (Folder) hoặc trường <em>Level / Layer</em> của KML; tắt tùy chọn thì vẽ lên các level KML_*.</li>
+<li>Tùy chọn: tô màu vùng có tô trong KML, giữ độ cao Z; ghi tên vào giữa vùng; ghi thuộc tính trùng tên trường thửa thành tag.</li>
 <li><strong>Xuất MapInfo</strong>: ghi MIF/MID kèm hệ tọa độ VN-2000 (datum 9999, 7 tham số). Trong MapInfo: <em>File &gt; Open</em> (kiểu MapInfo Interchange) hoặc <em>Table &gt; Import</em>, rồi <em>Save Copy As</em> để có file <strong>.TAB</strong>. Mã chữ UTF-8 cho MapInfo 15.2 trở lên, hoặc TCVN3 (font .VnTime) cho MapInfo đời cũ.</li>
 <li><strong>Nhập MapInfo</strong>: từ file .TAB, trong MapInfo dùng <em>Table &gt; Export</em> ra MIF/MID rồi nhập vào công cụ. Hỗ trợ Region (nhiều vòng), Pline (kể cả Multiple), Line, Point, Text; tọa độ kinh vĩ độ tự chuyển sang VN-2000; chữ mã TCVN3 có thể chuyển sang Unicode.</li>
 </ul>
@@ -873,7 +926,7 @@ Xóm 1 Phúc Lại
 <li>Chọn <strong>hệ thống đơn vị hành chính</strong>:</li>
 <li><strong>Sau sắp xếp – 2 cấp</strong> (từ 01/7/2025): <em>tỉnh – xã/phường/đặc khu</em> (34 tỉnh, 3.321 đơn vị cấp xã, theo danh mục mới nhất).</li>
 <li><strong>Trước sắp xếp – 3 cấp</strong>: <em>tỉnh – huyện – xã</em> (63 tỉnh), dùng cho bản đồ lập trước khi sáp nhập.</li>
-<li>Chọn <strong>tỉnh</strong>, (<strong>huyện</strong>), <strong>xã</strong>. Có thể gõ chữ đầu để nhảy nhanh trong danh sách.</li>
+<li>Chọn <strong>tỉnh</strong>, (<strong>huyện</strong>), <strong>xã</strong>. <strong>Gõ vài chữ bất kỳ trong tên để tìm</strong> (không cần dấu, vd <code>binh duong</code>, <code>phuc lai</code>): danh sách tự lọc và thả xuống; <strong>Enter</strong> lấy dòng đầu, <strong>lăn chuột</strong> hoặc phím ↑ ↓ để cuộn / chọn trong danh sách.</li>
 <li>Chế độ sau sắp xếp: dòng thông tin hiện <strong>các đơn vị trước sắp xếp hợp thành xã mới</strong> và khu vực tỉnh cũ của xã.</li>
 <li>Chế độ trước sắp xếp: hiện tỉnh mới mà tỉnh cũ thuộc về và (nếu tìm được) xã mới chứa xã cũ.</li>
 <li><strong>Kinh tuyến trục</strong> tự điền theo tỉnh. Tỉnh sau sắp xếp có nhiều kinh tuyến trục (theo Phụ lục 01 TT 26/2024/TT-BTNMT đã sửa bởi TT 23/2025/TT-BNNMT): công cụ tự chọn kinh tuyến trục <strong>của tỉnh cũ chứa xã đang chọn</strong>, vì bản đồ lập trước sáp nhập <strong>giữ nguyên kinh tuyến trục cũ</strong> (khoản 3 Điều 27 TT 26/2024; Công văn 991/BNNMT-QLĐĐ). Khi đo mới, chọn kinh tuyến trục mà cơ quan quản lý đất đai cấp tỉnh đã quyết định cho khu đo. Vẫn gõ tay được.</li>
@@ -1242,7 +1295,13 @@ Xóm 1 Phúc Lại
 </table>
 <p>Có thể nạp thông tin ban đầu từ <code>.ktt</code>/<code>.ktb</code> khác hoặc từ bảng Excel / CSV / FAMIS <code>.txt</code> / TMVmap <code>.mdb</code> / XML, và tạo topology ngay khi CSDL chưa có thửa. Liên kết DGN → CSDL lưu trong Registry nên mọi lệnh (sửa lỗi, topology, gán thông tin, nhãn, xuất Excel/SHP/GML…) tự đọc, ghi đúng CSDL đã kết nối.</p>
 <h3>5.23 Chạy cả quy trình bằng 1 nút</h3>
-<p>Tích các bước cần chạy (mặc định: Kết nối CSDL → Sửa lỗi → Tạo topology → Gán thông tin từ nhãn → <strong>Vẽ nhãn thửa</strong> → Vẽ nhãn quy chủ; từ bản 1.18.0 bước Vẽ nhãn thửa chạy trước Vẽ nhãn quy chủ), chọn <em>Dừng khi 1 bước lỗi</em>, bấm <strong>Thực hiện</strong>. Thông báo của từng bước không hiện giữa chừng mà gom vào báo cáo cuối (file <code>&lt;tên file&gt;_QuyTrinh.txt</code> chỉ ghi khi <code>[Chung] XuatBaoCao=1</code>). Ở phần <em>Phạm vi</em> chọn <strong>Nhiều tờ</strong> để chạy cho cả thư mục.</p>
+<p>Tích các bước cần chạy (mặc định: Kết nối CSDL → Sửa lỗi → Tạo topology → Gán thông tin từ nhãn → <strong>Vẽ nhãn thửa</strong> → Vẽ nhãn quy chủ), bấm <strong>Thực hiện</strong>. Thông báo bình thường của từng bước không hiện giữa chừng mà gom vào báo cáo cuối (file <code>&lt;tên file&gt;_QuyTrinh.txt</code> chỉ ghi khi <code>[Chung] XuatBaoCao=1</code>).</p>
+<p><strong>Từ bản 1.3:</strong></p>
+<ul>
+<li><em>Phạm vi thực hiện</em> ở đầu bảng: <strong>Tờ đang mở</strong> hoặc <strong>Nhiều tờ</strong> (các file DGN trong thư mục, bấm <code>...</code> để chọn thư mục, lọc theo mẫu tên, gồm cả thư mục con). Mỗi tờ được sao lưu, chạy hết các bước rồi tự lưu.</li>
+<li>Ô <strong>Khi 1 bước bị lỗi</strong> (<code>[QuyTrinh] XuLyLoi</code>): <strong>Báo ngay</strong> (mặc định) – gặp lỗi ở bước nào là hiện thông báo ngay (tên bước, tờ, nội dung lỗi) và hỏi: <strong>Yes = tạm dừng để sửa</strong>, <strong>No = bỏ qua chạy tiếp</strong>, <strong>Cancel = dừng</strong>; <em>Ghi vào báo cáo, chạy tiếp</em>; <em>Dừng quy trình</em>. Bước báo "còn lỗi cần sửa thủ công" (vd còn lỗi topo sau sửa tự động) cũng được tính là lỗi và mở sẵn bảng <em>Sửa lỗi thủ công</em>.</li>
+<li><strong>Tạm dừng → sửa → chạy tiếp</strong>: sửa xong (bản vẽ, thiết lập lệnh…), bấm lại <strong>Chạy cả quy trình</strong> → chọn <strong>Yes = Chạy tiếp</strong>: quy trình chạy lại đúng bước bị lỗi rồi tiếp tục đến hết, kể cả <strong>các tờ còn lại</strong> khi chạy nhiều tờ. Trạng thái tạm dừng lưu trong thư mục riêng của KTool nên vẫn chạy tiếp được sau khi tắt / mở lại MicroStation.</li>
+</ul>
 <h3>5.24 Gán thông tin từ nhãn – các dạng khác (menu Thửa đất)</h3>
 <ul>
 <li><strong>Bảng thửa nhỏ ở góc khung</strong>: bấm 2 góc bảng ngay trên bản vẽ (hoặc chọn đối tượng của bảng, hoặc nhập tọa độ 2 góc). Công cụ gom chữ thành dòng / cột, nhận cột theo tiêu đề (STT, Số thửa, Loại đất, Diện tích, Chủ) hoặc theo nội dung, hỗ trợ nhiều nhóm cột cạnh nhau; rồi tham chiếu ký hiệu (STT) ghi trong thửa nhỏ, hoặc số thửa đã có, để gán số thửa, mã loại đất, diện tích. Cũng bật được ngay trong <em>Gán thông tin từ nhãn</em>.</li>
@@ -1434,8 +1493,9 @@ Xóm 1 Phúc Lại
 <h3>5.42 Gán thông tin từ nhãn – tất cả dạng nhãn trong 1 giao diện</h3>
 <p>Nút <strong>Gán thông tin từ nhãn</strong> gộp mọi dạng nhãn vào 1 bảng thiết lập nhiều thẻ, bấm <strong>Thực hiện</strong> 1 lần là chạy lần lượt và gom kết quả vào 1 thông báo:</p>
 <ul>
-<li>Thẻ <strong>Các bước</strong>: tích dạng nhãn có trên bản vẽ – (1) nhãn địa chính: phân số / 3 dòng, 1 dòng (<code>12 LUC 350.5</code>), <code>Số thửa-Diện tích</code>, <code>Số thửa/Diện tích</code>, cell, <code>LUK240-236.5</code>, <code>284A</code>, nhãn tràn hoặc nằm ngoài thửa nhỏ; (2) nhãn có mũi tên chỉ vào thửa nhỏ; (3) nhãn quy chủ; (4) bảng thửa nhỏ ở góc khung; đánh dấu thửa còn thiếu số thửa / loại đất (<code>THIEU_SO</code>, <code>THIEU_LD</code>).</li>
-<li>Thẻ <strong>Gán trường thông tin</strong>: level / màu / cách lấy giá trị cho từng trường. Để trống toàn bộ thì KTool tự nhận dạng nhãn trên mọi level chứa nhãn.</li>
+<li>Thẻ <strong>Các bước</strong>: tích dạng nhãn có trên bản vẽ – (1) nhãn địa chính: phân số / 3 dòng, 1 dòng (<code>12 LUC 350.5</code>), <code>Số thửa-Diện tích</code>, <code>Số thửa/Diện tích</code>, cell, <code>LUK240-236.5</code>, <code>284A</code>, nhãn tràn hoặc nằm ngoài thửa nhỏ; (2) nhãn có mũi tên chỉ vào thửa (mặc định bật): nhãn nằm ngoài thửa, <strong>hoặc nằm trong 1 thửa nhưng có mũi tên chỉ sang thửa bên cạnh</strong> thì gán cho thửa được mũi tên chỉ vào – thửa có 2 nhãn (1 nhãn của chính thửa, 1 nhãn có mũi tên chỉ sang thửa kế bên) được gán đúng cho cả hai thửa; (3) nhãn quy chủ; (4) bảng thửa nhỏ ở góc khung; đánh dấu thửa còn thiếu số thửa / loại đất (<code>THIEU_SO</code>, <code>THIEU_LD</code>).</li>
+<li>Thẻ <strong>Gán trường thông tin</strong>: level / màu / cách lấy giá trị cho từng trường. Để trống toàn bộ thì KTool tự nhận dạng nhãn trên mọi level chứa nhãn.
+  Từ bản 1.3 gán được <strong>đồng thời nhiều trường trên nhiều level</strong> (mỗi ô level gõ được nhiều level <code>13,4,2</code>): chỉ chọn level mà để <em>(không gán)</em> ở cách lấy thì KTool tự chọn cách theo trường (số thửa → số nguyên, loại đất → mã loại đất, diện tích → số thập phân, trường khác → chữ); cách lấy mới <strong>Dòng 1 … Dòng 6 của nhãn</strong> cho nhãn nhiều dòng (tên chủ, địa chỉ…); diện tích ghi <strong>số nguyên</strong> (<code>711</code>, <code>1250</code>) nay được nhận – chọn số gần diện tích đồ họa nhất, kể cả khi số thửa và diện tích cùng 1 level; nhãn ghi ký hiệu loại đất cũ FAMIS (<code>2L</code>, <code>Mạ</code>, <code>T+vườn</code>…) được gán thành mã mới theo bảng quy đổi (mục 5.59, <code>[GanNhan] QuyDoiMaCu=1</code>). Kết quả báo từng trường: số thửa được gán, số thửa có nhãn, trường <strong>không tìm thấy chữ nào</strong> trên level / màu đã chọn, level không có trong file. Tiêu đề bảng gán không còn hiện 2 lần chồng nhau.</li>
 <li>Thẻ <strong>Nhãn phức tạp – thửa nhỏ</strong>, <strong>Nhãn quy chủ</strong>, <strong>Bảng thửa nhỏ</strong>: thông số từng dạng.</li>
 <li><strong>Nhãn quy chủ</strong>: mỗi thửa 1 nhãn nhiều dòng (Text Node hoặc chữ rời xếp chồng). Các dòng theo <em>Thứ tự dòng</em> (như khi vẽ nhãn quy chủ), có thể kèm tên trường (<code>Tờ: 4</code>, <code>Thửa: 396</code>); dòng trống / <code>?</code> là trường chưa có giá trị. KTool kiểm tra kiểu từng dòng (số hiệu, mã loại đất, diện tích, chữ) nên nhãn bỏ dòng trống vẫn gán đúng.</li>
 <li><strong>Bảng thửa nhỏ góc khung</strong>: chỉ cần <strong>bấm 1 góc bảng</strong> (góc trên hoặc góc dưới) – KTool tự nhận khung bảng (theo kích thước bảng Rộng × Cao mm nếu nhập, không thì gom các ô chữ liền kề theo hướng có bảng) rồi tự tách cột STT / số thửa / loại đất / diện tích.</li>
@@ -1443,6 +1503,8 @@ Xóm 1 Phúc Lại
 </ul>
 <h3>5.43 Bảng thông tin thuộc tính: tự sắp xếp, ẩn / hiện, lọc lỗi → Sửa nhanh</h3>
 <ul>
+<li><strong>Phím mũi tên</strong>: ↑ / ↓ chuyển sang thửa trước / sau (bảng tự cuộn, tự phóng tới thửa); ← / → chuyển sang trường trước / sau (khi con trỏ đang ở đầu / cuối ô). Các nút <strong>▲ ▼ ◄ ►</strong> ở hàng nút dưới làm việc tương tự. Thửa đang sửa có thay đổi thì <strong>tự ghi</strong> trước khi chuyển thửa.</li>
+<li><strong>Đóng bảng</strong> thì bỏ tô sáng ranh thửa và bỏ chọn thửa trên bản vẽ.</li>
 <li>Kéo cửa sổ theo bất kỳ hướng nào: hàng nút tự xuống dòng; khung <strong>Thuộc tính thửa đang chọn</strong> tự chia số cột theo bề rộng (hẹp → 1 cột chạy dọc, rộng → 2–4 cột), thiếu chỗ thì có thanh cuộn; danh sách thửa luôn giữ ít nhất 1/3 chiều cao.</li>
 <li>Nút <strong>Ẩn thuộc tính / Hiện thuộc tính</strong>: ẩn khung để danh sách chiếm toàn bộ cửa sổ (nhớ cho lần sau).</li>
 <li>Bộ lọc mới: thiếu số thửa, thiếu loại đất, thiếu diện tích pháp lý, thiếu tên chủ, trùng số thửa, sai mã loại đất, <strong>mâu thuẫn khi gán</strong> (giá trị có dấu ?), <strong>lệch DT pháp lý – đồ họa</strong> (quá <code>[BangTT] LechDT</code> %, mặc định 5%), <strong>thửa thừa</strong> (chưa có thông tin), <strong>có lỗi bất kỳ</strong>.</li>
@@ -1509,7 +1571,8 @@ Xóm 1 Phúc Lại
 <li>Gán thông tin từ nhãn – 5.1 gán đồng loạt cho tất cả nhãn; 5.2 thửa nhỏ (nhãn tràn, ngoài thửa); 5.3 bảng thửa nhỏ; 5.4 nhãn mũi tên; 5.5 thửa 1 dòng; 5.6 nhãn Cell; 5.7 'Số thửa-Diện tích'; 5.8 FAMIS; 5.9 TMVmap; <strong>5.10 nhãn khác</strong></li>
 <li>Xem bảng thông tin thửa đất</li>
 </ol>
-<p><strong>5.10 Gán thông tin nhãn khác</strong>: hộp thoại kiểu gCadas – mỗi trường (nhóm Thửa đất / Chủ sử dụng / Giấy chứng nhận) có ô tích và ô <strong>số thứ tự dòng</strong>. Mỗi thửa, các dòng chữ nhãn nằm trong thửa (Text, Text Node trên lớp nhãn, lọc theo màu) được xếp từ trên xuống; dòng thứ k gán cho trường có số k.</p>
+<p><strong>Chạy cho nhiều tờ (từ bản 1.3)</strong>: mọi bước 1 → 5 (Kiểm tra lỗi, Sửa lỗi tự động, Xóa đánh dấu lỗi, Tạo vùng, các lệnh gán thông tin từ nhãn 5.1, 5.2, 5.4–5.7, 5.10, 5.11) – cùng Chuẩn hóa, Vẽ nhãn, Đánh số thửa, Kiểm tra thuộc tính, Chuyển font, Quy đổi mã loại đất… – có thêm nhóm <strong>Phạm vi thực hiện</strong> cuối thẻ đầu của bảng chọn: chọn <strong>Nhiều tờ (các file DGN trong thư mục)</strong>, bấm <code>...</code> chọn thư mục, mẫu tên (<code>*.dgn</code>, <code>To*.dgn</code>), có gồm thư mục con. Lựa chọn trên bảng áp dụng cho từng tờ; mỗi tờ được sao lưu, chạy, tự lưu; kết quả ghi nhật ký (mở tự động nếu có lỗi). Mỗi lần mở bảng mặc định lại là <em>Tờ đang mở</em>. Các bước cần thao tác tay (2.2 Sửa lỗi thủ công, 5.3 bảng thửa nhỏ bấm trên bản vẽ, 5.8 / 5.9 file FAMIS / TMVmap riêng từng tờ, 6. Bảng thông tin) vẫn làm từng tờ.</p>
+<p><strong>5.10 Gán thông tin nhãn khác</strong>: hộp thoại kiểu gCadas – mỗi trường (nhóm Thửa đất / Chủ sử dụng / Giấy chứng nhận) có ô tích và ô <strong>số thứ tự dòng</strong>. Mỗi thửa, các dòng chữ nhãn nằm trong thửa (Text, Text Node trên lớp nhãn, lọc theo màu) được xếp từ trên xuống; dòng thứ k gán cho trường có số k. <strong>Tích chọn trường thì ô số thứ tự bên cạnh tự nhảy số tiếp theo</strong> (trường tích đầu tiên = 1, tiếp theo = 2...); bỏ tích thì ô về 0 và các số phía sau tự dồn lại; gõ số &gt; 0 vào ô thì trường tự được tích.</p>
 <h3>5.51 Nhập CSDL bản đồ gCadas (.gtp) vào CSDL thửa (.ktb)</h3>
 <p>Menu Thửa đất &gt; Liên kết gCadas &gt; <strong>Nhập CSDL bản đồ gCadas (.gtp) vào CSDL thửa (.ktb)</strong>: lấy hình thửa và thông tin có sẵn trong .gtp (số tờ, số thửa, loại đất kể cả đa mục đích, diện tích, chủ sử dụng, địa chỉ, trường mở rộng, LDi / DTLDi) tạo CSDL .ktb cho bản vẽ – dùng ngay Bảng thông tin, vẽ nhãn, thống kê, đồng bộ... mà không phải làm lại bước 1 – 5. CSDL .ktb cũ (nếu có) được sao lưu vào <code>%LOCALAPPDATA%\KTool\SaoLuu\&lt;tên file&gt;</code>; trường có trong .gtp mà KTool chưa có được tự thêm. Muốn thấy hình thửa trên bản vẽ: <em>Vẽ vùng thửa từ CSDL</em>.</p>
 <h3>5.52 Menu "Tiện ích" theo nhóm gCadas</h3>
@@ -1536,6 +1599,41 @@ Xóm 1 Phúc Lại
 </ul>
 <h3>5.57 Bảng thông tin thửa đất dạng lưới kẻ ô (1.0)</h3>
 <p>Bảng thông tin thửa đất hiển thị dạng <strong>lưới kẻ ô, kẻ hàng bằng đường kẻ nhạt</strong>: dòng tiêu đề cố định (chữ đậm, nền xám nhạt), cột <strong>STT</strong>, dòng chẵn lẻ xen màu, dòng đang chọn tô sáng, độ rộng cột tự theo nội dung. Bấm 1 ô để chọn thửa (nạp thuộc tính vào khung sửa, tự phóng tới thửa nếu tích); <strong>bấm đúp</strong> để phóng tới thửa; <strong>lăn chuột</strong> hoặc kéo thanh cuộn bên phải để cuộn; bảng nhiều cột có thanh cuộn ngang. Bảng chỉ dựng ô cho các dòng đang hiện nên mở nhanh cả với tờ có hàng nghìn thửa.</p>
+<h3>5.58 Gán thông tin từ nhãn "Mã loại đất: Diện tích" (1.2)</h3>
+<p>Menu <em>Thửa đất &gt; Gán thông tin từ nhãn &gt; 5.11</em>: đọc nhãn dạng <strong><code>HNK: 100.0</code></strong>, <code>NTS:563.1</code>, <code>BHK:10548.3</code>, <code>ONT = 300</code>, <code>CLN: 1.250,5 m2</code>… (mã loại đất, dấu <code>:</code> hoặc <code>=</code>, diện tích; dấu thập phân <code>.</code> hoặc <code>,</code>). Nhiều nhãn trong 1 thửa, hoặc nhiều cặp trên 1 chữ (<code>ONT:300 CLN:1250.5</code>), được gộp lại:</p>
+<ul>
+<li><strong>Loại đất</strong> = các mã nối bằng <code>+</code> theo thứ tự nhãn từ trên xuống, trái sang phải (<code>ONT+CLN</code>); mã trùng thì cộng diện tích. Thửa đã có 1 mã nằm trong danh sách thì được nâng thành đa mục đích.</li>
+<li><strong>Diện tích</strong> (trường chọn ở ô <em>Trường nhận diện tích</em>, mặc định <em>DIENTICHPL</em>) = tổng diện tích các loại.</li>
+<li><strong>LD1/DTLD1, LD2/DTLD2…</strong> = mã và diện tích từng loại (tự tạo trường nếu chưa có) – dùng ngay cho <em>Vẽ nhãn thửa đa mục đích</em>.</li>
+<li>Nhãn nằm trong thửa gán cho thửa đó; nhãn ngoài thửa có <strong>mũi tên</strong> thì gán cho thửa mũi tên chỉ vào, không có thì cho thửa gần nhất trong khoảng cách đặt ở bảng chọn. Chữ nằm trong cell cũng được đọc.</li>
+<li>Lệnh <em>Gán thông tin từ nhãn</em> (tổng hợp) cũng tự nhận dạng nhãn này: nhãn <code>Mã: Diện tích</code> không bị hiểu nhầm thành số thửa / diện tích thửa.</li>
+</ul>
+<p>Kiểu nhãn này là kiểu <code>LDDT</code> trong <code>[GanNhan]</code> và key-in <code>vba run [KTool]modMain.GanNhanLDDT</code>.</p>
+<h3>5.59 Quy đổi ký hiệu loại đất cũ FAMIS sang mã mới (menu Chuẩn hóa, 1.3)</h3>
+<p>Lệnh <strong>Quét nhãn thửa, quy đổi mã loại đất cũ (FAMIS) sang mã mới</strong> (menu <em>Chuẩn hóa</em>, key-in <code>vba run [KTool]modMain.QuyDoiMaLoaiDat</code>):</p>
+<ul>
+<li>Quét các level nhãn thửa (level chọn + tự quét mọi level chứa nhãn), đổi ký hiệu loại đất cũ ghi trên nhãn bản đồ FAMIS sang mã theo TT 08/2024/TT-BTNMT: <code>3L</code>, <code>2L</code> → LUC; <code>1L</code>, <code>Mạ</code>, <code>L/n</code> → LUK; <code>vườn</code>, <code>Màu</code>, <code>Cói</code>, <code>ĐM</code>, <code>Rau</code>… → HNK; <code>CN</code>, <code>Q</code>, <code>LN.k</code> → CLN; <code>Ao(Hồ).c</code> → NTS; <code>T</code> → ODT / ONT; <code>T+vườn</code> → ODT+HNK / ONT+HNK; <code>GT</code> → DGT; <code>TL</code> → DTL; <code>NĐ</code> → NTD; <code>Sg(suối)</code> → SON; <code>N/đá</code> → NCS…</li>
+<li>Nhãn chữ font <strong>TCVN3 (.VnTime)</strong>, VNI hay Unicode đều nhận (so khớp theo chữ không dấu). Chỉ đổi chữ là ký hiệu loại đất: cả chữ là 1 ký hiệu, hoặc nhãn nhiều phần mà mọi phần có chữ đều là ký hiệu / mã (<code>125 2L 350.5</code> → <code>125 LUC 350.5</code>, <code>LUA236</code> → <code>LUC236</code>); chữ khác (tên đường, ghi chú) giữ nguyên.</li>
+<li><strong>Thuộc tính</strong> loại đất của thửa (LOAIDAT, LD1, LD2…) cũng được đổi – nhận cả <strong>mã số FAMIS</strong> (<code>5</code>, <code>52</code>, <code>1752</code>…) ở cột đầu của bảng.</li>
+<li><strong>Bảng quy đổi</strong>: file <code>.txt</code> / <code>.csv</code> / Excel mỗi dòng <code>MãFAMIS,KýHiệuCũ,MãMới</code> (hoặc <code>KýHiệuCũ,MãMới</code>), dòng <code>#</code> là ghi chú. Ô <em>File bảng quy đổi</em> để trống: dùng <code>MaLoaiDat_FAMIS.txt</code> cạnh file DGN, không có thì bảng kèm KTool (lập từ file <code>mdsd2003.txt</code> của tác giả, thư mục <code>mau</code> trong thư mục cài KTool). File lưu bằng TCVN3 hay UTF-8 đều đọc được. Ô <em>Bổ sung / sửa cặp ký hiệu</em> ghi đè bảng (vd <code>T:ONT, LNQ:CLN</code>).</li>
+<li>Ký hiệu <strong>T</strong> (đất ở) trùng cho cả ODT và ONT: ô <em>Ký hiệu đất ở 'T'</em> = <strong>Tự động theo ĐVHC</strong> (phường, thị trấn → ODT; xã → ONT, lấy từ <em>Thiết lập đơn vị hành chính</em> của tờ), hoặc chọn cố định ODT / ONT.</li>
+<li><em>Đổi tiếp mã cũ</em> (mặc định bật): mã trong bảng còn theo thông tư cũ (RSK, RSM → RSX; RPK, RPM → RPH; RDK, RDM → RDD; QPH → CQP…) được đổi tiếp sang mã TT 08/2024. Mã mới có dấu <code>?</code> = cần xem xét, giữ nguyên và báo lại; mã không có trong danh mục mới và chưa có trong bảng cũng được liệt kê để bổ sung.</li>
+<li><em>Chỉ lập báo cáo, chưa đổi</em>: chạy thử, xem danh sách. Có sao lưu trước khi đổi; chạy được cho <strong>nhiều tờ</strong>.</li>
+</ul>
+<p>Gán thông tin từ nhãn (5.1, 5.42) cũng dùng bảng này: nhãn ghi ký hiệu cũ được gán thẳng mã mới (<code>[GanNhan] QuyDoiMaCu=0</code> để tắt).</p>
+<h3>5.60 Nút <code>...</code> chọn thư mục (1.3)</h3>
+<p>Mọi ô đường dẫn thư mục trong bảng chọn (thư mục các tờ khi chạy nhiều tờ, chạy hàng loạt, tiếp biên, gộp DGN, phân mảnh, thư mục xuất Shapefile / MIF / CAD / hồ sơ / V7, thư mục mẫu…) có nút <strong><code>...</code></strong> mở hộp thoại chọn thư mục của Windows (mở sẵn thư mục đang ghi trong ô, có ô gõ đường dẫn, nút tạo thư mục mới) – không phải ra ngoài sao chép đường dẫn. Vẫn gõ / dán đường dẫn trực tiếp được.</p>
+<h3>5.61 Số tờ tự nhận theo tờ đang mở (thẻ Hệ thống, 1.4)</h3>
+<p>Ô <strong>Số tờ</strong> trên thẻ <em>Hệ thống</em> tự hiện số tờ của <strong>tờ đang mở</strong>, lấy theo thứ tự: số đã nhập tay cho riêng file này → chữ <code>TỜ SỐ 67</code> / <code>Tờ số: 67</code> trên khung bản đồ (chữ Unicode hay TCVN3 đều đọc) → số trong tên file (<code>To67.dgn</code>, <code>T_67</code>, <code>BD_67_2000.dgn</code> – bỏ qua số tỷ lệ 500, 1000, 2000…). Mở tờ khác khi công cụ đang mở thì ô tự đổi theo tờ mới. Sửa số rồi bấm <strong>Lưu thông số</strong> = ghi số tờ riêng cho file đó (mục <code>[SoToFile]</code> trong cấu hình); xóa trắng rồi lưu = quay lại tự nhận. Mọi lệnh (gán thông tin, vẽ nhãn, xuất dữ liệu, chạy nhiều tờ…) dùng số tờ này nên không còn lấy nhầm số tờ của tờ mở trước.</p>
+<h3>5.62 Nhập điểm điều tra từ KTool Mobile (menu Tiện ích, 1.4)</h3>
+<p>Trên điện thoại (KTool Mobile 1.1, tab <strong>Điểm</strong>): ghim điểm tại vị trí GPS hoặc chạm trên bản đồ, nhập phiếu điều tra (tên điểm phẫu diện, loại cây hiện trạng, loại đất hiện trạng, ghi chú), chụp ảnh hiện trạng; <strong>Xuất Shapefile + ảnh (.zip)</strong> rồi gửi gói về máy tính.</p>
+<p>Trên máy tính: <em>Tiện ích &gt; Chuyển đổi &gt; </em><em>Nhập điểm điều tra từ KTool Mobile</em>** – chọn thẳng file <code>.zip</code> (tự giải nén ra thư mục cùng tên, gồm thư mục ảnh), hoặc <code>DiemDieuTra.csv</code> / <code>.shp</code> đã giải nén:</p>
+<ul>
+<li>Mỗi điểm vẽ 1 vòng tròn ký hiệu + điểm tâm (level <code>DIEM_DIEUTRA</code>) và chữ tên điểm (level <code>CHU_DIEUTRA</code>; chọn <em>Tên điểm – loại cây – loại đất</em> hoặc không ghi chữ).</li>
+<li>Tọa độ mặc định <strong>tính lại từ vĩ độ / kinh độ GPS theo kinh tuyến trục của tờ</strong> (không phụ thuộc kinh tuyến trục cài trên điện thoại); hoặc dùng cột X_BAC, Y_DONG trong bảng.</li>
+<li>Thông tin điều tra gắn vào ký hiệu điểm dạng <strong>tag <code>DIEMDIEUTRA</code></strong>: TEN_DIEM, LOAI_CAY, LOAI_DAT, GHI_CHU, ANH (đường dẫn đầy đủ tới ảnh), VI_DO, KINH_DO, X_BAC, Y_DONG, DO_CX, THOI_GIAN, SO_TO, SO_THUA – xem bằng <em>Element Information</em> hoặc <em>Tags</em>.</li>
+<li>Shapefile trong gói (điểm + đủ trường thuộc tính, <code>.prj</code> VN-2000 hoặc WGS84) cũng mở được bằng lệnh <em>Nhập Shapefile</em>, QGIS, ArcGIS; <code>DiemDieuTra.kml</code> mở bằng Google Earth.</li>
+</ul>
 <h2>6. Gợi ý thông số</h2>
 <table>
 <thead>
@@ -1601,9 +1699,14 @@ vba run [KTool]modMain.XoaLoi
 vba run [KTool]modMain.TaoVung
 vba run [KTool]modMain.GanTuNhan
 vba run [KTool]modMain.DanhSoThua
+vba run [KTool]modMain.DiemMobile           ' nhap diem dieu tra tu KTool Mobile
 vba run [KTool]modMain.NhapThuocTinhCSV
 vba run [KTool]modMain.XuatThuocTinhCSV
 vba run [KTool]modMain.NhanThua
+vba run [KTool]modMain.QuyDoiMaLoaiDat     ' quy doi ky hieu loai dat cu FAMIS -&gt; ma TT 08/2024
+vba run [KTool]modMain.NhanThuaDonMuc     ' ve nhan thua don muc dich (da muc dich de trong loai dat)
+vba run [KTool]modMain.NhanThuaDaMuc      ' ve nhan &quot;Ma: Dien tich&quot; cho thua da muc dich
+vba run [KTool]modMain.GanNhanLDDT        ' gan thong tin tu nhan &quot;Ma loai dat: Dien tich&quot;
 vba run [KTool]modMain.NhanQuyChu
 vba run [KTool]modMain.XoaNhanCu
 vba run [KTool]modMain.KiemTraTT
